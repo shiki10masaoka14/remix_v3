@@ -1,0 +1,14 @@
+{
+  "name": "remix_v3",
+  "dockerComposeFile": "./docker-compose.yml",
+  "service": "node",
+  "workspaceFolder": "/workspace",
+  "shutdownAction": "stopCompose",
+  "extensions": ["streetsidesoftware.code-spell-checker", "dbaeumer.vscode-eslint", "fauna.fauna", "graphql.vscode-graphql", "oderwat.indent-rainbow", "esbenp.prettier-vscode", "visualstudioexptteam.vscodeintellicode", "github.copilot"],
+  "settings": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2,
+    "files.autoSave": "onFocusChange"
+  }
+}

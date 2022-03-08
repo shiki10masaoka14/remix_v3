@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  node:
+    # コンテナ名
+    container_name: remix_v3
+    image: node:16-alpine3.14
+    build:
+      dockerfile: Dockerfile
+    # コンテナの中に入る
+    tty: true
+    # ボリューム
+    volumes:
+      - .:/workspace
+      - /workspace/node_modules
+      - /workspace/.cache
+      - /workspace/build
+      - /workspace/public/build
+    # 環境変数
+    environment:
+      TZ: "Asia/Tokyo"
+    command: sleep infinity

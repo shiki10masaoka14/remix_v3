@@ -1,32 +1,90 @@
 import {
+  ChakraProvider,
+  Heading,
+  Center,
+} from "@chakra-ui/react";
+import {
   Links,
   LiveReload,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  useCatch,
 } from "remix";
-import type { MetaFunction } from "remix";
 
-export const meta: MetaFunction = () => {
-  return { title: "New Remix App" };
-};
+function Document({
+  children,
+  title = "App title",
+}: {
+  children: React.ReactNode;
+  title?: string;
+}) {
+  return (
+    <html lang="ja">
+      <head>
+        <meta charSet="utf-8" />
+        <meta
+          name="viewport"
+          content="width=device-width,initial-scale=1"
+        />
+        <Meta />
+        <title>{title}</title>
+        <Links />
+        <link rel="shortcut icon" href="/favicon.ico" />
+      </head>
+      <body>
+        {children}
+        <ScrollRestoration />
+        <Scripts />
+        {process.env.NODE_ENV === "development" && (
+          <LiveReload />
+        )}
+      </body>
+    </html>
+  );
+}
 
 export default function App() {
   return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <Meta />
-        <Links />
-      </head>
-      <body>
+    <Document>
+      <ChakraProvider>
         <Outlet />
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
-      </body>
-    </html>
+      </ChakraProvider>
+    </Document>
+  );
+}
+
+export function CatchBoundary() {
+  const caught = useCatch();
+
+  return (
+    <Document
+      title={`${caught.status} ${caught.statusText}`}
+    >
+      <ChakraProvider>
+        <Center minH={"100vh"}>
+          <Heading as="h1">
+            [CatchBoundary]: {caught.status}{" "}
+            {caught.statusText}
+          </Heading>
+        </Center>
+      </ChakraProvider>
+    </Document>
+  );
+}
+
+export function ErrorBoundary({ error }: { error: Error }) {
+  return (
+    <Document title="Error!">
+      <ChakraProvider>
+        <Center minH={"100vh"}>
+          <Heading as="h1">
+            [ErrorBoundary]: There was an error:{" "}
+            {error.message}
+          </Heading>
+        </Center>
+      </ChakraProvider>
+    </Document>
   );
 }

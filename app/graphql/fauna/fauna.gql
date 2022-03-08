@@ -1,0 +1,17 @@
+query AllTodos {
+  allTodos {
+    data {
+      _id
+      task
+      completed
+    }
+  }
+}
+
+mutation CreateTodo($data: TodoInput!) {
+  createTodo(data: $data) {
+    _id
+    task
+    completed
+  }
+}

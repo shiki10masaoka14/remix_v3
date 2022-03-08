@@ -53,8 +53,7 @@
     "dev:miniflare": "cross-env NODE_ENV=development miniflare ./build/index.js --watch",
     "start": "cross-env NODE_ENV=production miniflare ./build/index.js",
     "deploy": "npm run build && wrangler publish",
-    "generate-shopify": "graphql-codegen --require dotenv/config --config app/utils/shopify/shopifyCodegen.yml",
-    "generate-graphCMS": "graphql-codegen --require dotenv/config --config app/utils/graphCMS/graphCMSCodegen.yml"
+    "generate-fauna": "graphql-codegen --require dotenv/config --config app/graphql/fauna/codegen.yml"
   },
   "main": "build/index.js"
 }

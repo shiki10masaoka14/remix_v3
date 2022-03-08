@@ -1,0 +1,9 @@
+# front end
+schema: app/graphql/fauna/schema.graphql
+documents: app/graphql/fauna/fauna.gql
+generates:
+  app/graphql/fauna/generated.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-graphql-request

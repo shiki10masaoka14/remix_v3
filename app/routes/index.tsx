@@ -15,6 +15,7 @@ import {
   Form,
   LoaderFunction,
   redirect,
+  useFetcher,
   useLoaderData,
   useTransition,
 } from "remix";
@@ -73,8 +74,9 @@ const Index: VFC = () => {
   const { allTodos } = useLoaderData<AllTodosQuery>();
   const transition = useTransition();
   const taskEl = useRef<HTMLInputElement>(null!);
+  const fetcher = useFetcher();
 
-  // 入力情報リセット
+  // Inputの入力情報リセット
   useEffect(() => {
     if (transition.type === "actionSubmission") {
       taskEl.current.value = "";
@@ -122,7 +124,18 @@ const Index: VFC = () => {
               (todo) =>
                 todo?.completed === false && (
                   <HStack key={todo._id}>
-                    <Text w={300}>{todo.task}</Text>
+                    <Text
+                      w={300}
+                      opacity={
+                        fetcher.submission?.formData.get(
+                          "deleteBtn",
+                        ) === todo._id
+                          ? 0.5
+                          : 1
+                      }
+                    >
+                      {todo.task}
+                    </Text>
                     <Form
                       method="post"
                       action="api/complete"
@@ -143,13 +156,16 @@ const Index: VFC = () => {
                         )}
                       </Button>
                     </Form>
-                    <Form method="post" action="api/delete">
+                    <fetcher.Form
+                      method="post"
+                      action="api/delete"
+                    >
                       <Button
                         type="submit"
                         name="deleteBtn"
                         value={todo._id}
                       >
-                        {transition.submission?.formData.get(
+                        {fetcher.submission?.formData.get(
                           "deleteBtn",
                         ) === todo._id ? (
                           <Box>
@@ -159,7 +175,7 @@ const Index: VFC = () => {
                           "削除"
                         )}
                       </Button>
-                    </Form>
+                    </fetcher.Form>
                   </HStack>
                 ),
             )}

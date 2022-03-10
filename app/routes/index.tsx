@@ -1,22 +1,14 @@
 import {
   Box,
-  BoxProps,
   Button,
-  Center,
   Container,
   Heading,
   HStack,
   Input,
-  Spinner,
   Text,
   VStack,
 } from "@chakra-ui/react";
-import {
-  AnimatePresence,
-  motion,
-  Transition,
-} from "framer-motion";
-import { useEffect, useState, VFC } from "react";
+import { useEffect, useRef, useState, VFC } from "react";
 import {
   ActionFunction,
   Form,
@@ -31,7 +23,6 @@ import {
   CreateTodoDocument,
 } from "~/graphql/fauna/generated";
 import { faunaResolver } from "~/graphql/fauna/resolver";
-import { useFauna } from "~/hooks/useFauna";
 
 // ここまで
 //
@@ -39,10 +30,13 @@ import { useFauna } from "~/hooks/useFauna";
 //
 // ここから
 
-export const MotionBox = motion<BoxProps | Transition>(Box);
-
 export const loader: LoaderFunction = async () => {
-  return { FAUNA_ENDPOINT, FAUNA_SECRET_KEY };
+  const { data: allTodosData } = await faunaResolver(
+    AllTodosDocument.loc?.source.body,
+  );
+  const { allTodos } = allTodosData;
+
+  return { allTodos };
 };
 
 // ここまで
@@ -64,6 +58,7 @@ export const action: ActionFunction = async ({
       completed: false,
     },
   });
+
   return redirect(`/`);
 };
 
@@ -74,23 +69,15 @@ export const action: ActionFunction = async ({
 // ここから
 
 const Index: VFC = () => {
-  const { FAUNA_ENDPOINT, FAUNA_SECRET_KEY } =
-    useLoaderData();
-  const { faunaData } = useFauna(
-    FAUNA_ENDPOINT,
-    FAUNA_SECRET_KEY,
-    AllTodosDocument.loc?.source.body,
-  );
-  const allTodosData = faunaData as AllTodosQuery;
-
+  const { allTodos } = useLoaderData<AllTodosQuery>();
   const transition = useTransition();
+  const taskEl = useRef<HTMLInputElement>(null!);
 
-  const text =
-    transition.state === "submitting"
-      ? "Saving..."
-      : transition.state === "loading"
-      ? "Saved!"
-      : "Go";
+  useEffect(() => {
+    if (transition.type === "actionSubmission") {
+      taskEl.current.value = "";
+    }
+  }, [transition.type]);
 
   const [isLoaded, setLoaded] = useState(false);
   useEffect(() => {
@@ -100,77 +87,84 @@ const Index: VFC = () => {
     return <></>;
   }
 
+  // ここまで
+  //
+  //
+  //
+  // ここから
+
   return (
-    <>
-      <Container mt={"60px"}>
-        <VStack spacing={10} align={"start"}>
-          <Heading alignSelf={"center"}>{text}</Heading>
-          <HStack
-            as={Form}
-            method="post"
-            alignSelf={"center"}
-          >
-            <Input name="task" />
-            <Button type="submit">
-              {transition.state === "idle" ? (
-                "追加"
-              ) : (
-                <Box>
-                  <Spinner />
-                </Box>
-              )}
-            </Button>
-          </HStack>
-          <Box>
-            <Heading>未完了のTodo</Heading>
-            <VStack>
-              {allTodosData?.allTodos.data.map(
-                (todo) =>
-                  todo?.completed === false && (
-                    <HStack key={todo._id}>
-                      <Text w={300}>{todo.task}</Text>
-                      <Button>完了</Button>
-                      <Button>削除</Button>
-                    </HStack>
-                  ),
-              )}
-            </VStack>
-          </Box>
-          <Box>
-            <Heading>完了したTodo</Heading>
-            {allTodosData?.allTodos.data.map(
+    <Container mt={"60px"}>
+      <VStack spacing={10} align={"start"}>
+        <HStack
+          as={Form}
+          method="post"
+          alignSelf={"center"}
+        >
+          <Input name="task" ref={taskEl} />
+          <Button type="submit">追加</Button>
+        </HStack>
+        <Box>
+          <Heading>未完了のTodo</Heading>
+          <VStack>
+            {allTodos.data.map(
+              (todo) =>
+                todo?.completed === false && (
+                  <HStack key={todo._id}>
+                    <Text w={300}>{todo.task}</Text>
+                    <Form
+                      method="post"
+                      action="api/complete"
+                    >
+                      <Button
+                        type="submit"
+                        name="complete"
+                        value={todo._id}
+                      >
+                        完了
+                      </Button>
+                    </Form>
+                    <Form method="post" action="api/delete">
+                      <Button
+                        type="submit"
+                        name="deleteBtn"
+                        value={todo._id}
+                      >
+                        削除
+                      </Button>
+                    </Form>
+                  </HStack>
+                ),
+            )}
+          </VStack>
+        </Box>
+        <Box>
+          <Heading>完了したTodo</Heading>
+          <VStack>
+            {allTodos.data.map(
               (todo) =>
                 todo?.completed === true && (
                   <HStack key={todo._id}>
                     <Text w={300}>{todo.task}</Text>
-                    <Button>戻</Button>
+                    <Form
+                      method="post"
+                      action="api/incomplete"
+                    >
+                      <Button
+                        type="submit"
+                        name="complete"
+                        value={todo._id}
+                      >
+                        戻す
+                      </Button>
+                    </Form>
                   </HStack>
                 ),
             )}
-          </Box>
-        </VStack>
-      </Container>
-      {/* <AnimatePresence>
-        {transition.state === "idle" || (
-          <MotionBox
-            top={0}
-            left={0}
-            w={"100%"}
-            h={"100%"}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            bg={"blackAlpha.800"}
-            position={"fixed"}
-          >
-            <Center h={"100%"}>
-              <Spinner color={"white"} size={"xl"} />
-            </Center>
-          </MotionBox>
-        )}
-      </AnimatePresence> */}
-    </>
+          </VStack>
+        </Box>
+      </VStack>
+    </Container>
   );
 };
 export default Index;

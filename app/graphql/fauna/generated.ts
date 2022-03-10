@@ -102,6 +102,21 @@ export type CreateTodoMutationVariables = Exact<{
 
 export type CreateTodoMutation = { __typename?: 'Mutation', createTodo: { __typename?: 'Todo', _id: string, task: string, completed: boolean } };
 
+export type PartialUpdateTodoMutationVariables = Exact<{
+  id: Scalars['ID'];
+  data: PartialUpdateTodoInput;
+}>;
+
+
+export type PartialUpdateTodoMutation = { __typename?: 'Mutation', partialUpdateTodo?: { __typename?: 'Todo', _id: string, task: string, completed: boolean } | null };
+
+export type DeleteTodoMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteTodoMutation = { __typename?: 'Mutation', deleteTodo?: { __typename?: 'Todo', _id: string } | null };
+
 
 export const AllTodosDocument = gql`
     query AllTodos {
@@ -123,6 +138,22 @@ export const CreateTodoDocument = gql`
   }
 }
     `;
+export const PartialUpdateTodoDocument = gql`
+    mutation PartialUpdateTodo($id: ID!, $data: PartialUpdateTodoInput!) {
+  partialUpdateTodo(id: $id, data: $data) {
+    _id
+    task
+    completed
+  }
+}
+    `;
+export const DeleteTodoDocument = gql`
+    mutation DeleteTodo($id: ID!) {
+  deleteTodo(id: $id) {
+    _id
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string) => Promise<T>;
 
@@ -136,6 +167,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     CreateTodo(variables: CreateTodoMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateTodoMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<CreateTodoMutation>(CreateTodoDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CreateTodo');
+    },
+    PartialUpdateTodo(variables: PartialUpdateTodoMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<PartialUpdateTodoMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<PartialUpdateTodoMutation>(PartialUpdateTodoDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'PartialUpdateTodo');
+    },
+    DeleteTodo(variables: DeleteTodoMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<DeleteTodoMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<DeleteTodoMutation>(DeleteTodoDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'DeleteTodo');
     }
   };
 }

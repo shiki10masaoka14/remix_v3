@@ -5,6 +5,7 @@ import {
   Heading,
   HStack,
   Input,
+  Spinner,
   Text,
   VStack,
 } from "@chakra-ui/react";
@@ -73,12 +74,14 @@ const Index: VFC = () => {
   const transition = useTransition();
   const taskEl = useRef<HTMLInputElement>(null!);
 
+  // 入力情報リセット
   useEffect(() => {
     if (transition.type === "actionSubmission") {
       taskEl.current.value = "";
     }
   }, [transition.type]);
 
+  // useLayoutEffectの使用を促すワーニングを回避
   const [isLoaded, setLoaded] = useState(false);
   useEffect(() => {
     setLoaded(true);
@@ -102,7 +105,15 @@ const Index: VFC = () => {
           alignSelf={"center"}
         >
           <Input name="task" ref={taskEl} />
-          <Button type="submit">追加</Button>
+          <Button type="submit">
+            {transition.submission?.formData.get("task") ? (
+              <Box>
+                <Spinner size={"xs"} />
+              </Box>
+            ) : (
+              "追加"
+            )}
+          </Button>
         </HStack>
         <Box>
           <Heading>未完了のTodo</Heading>
@@ -121,7 +132,15 @@ const Index: VFC = () => {
                         name="complete"
                         value={todo._id}
                       >
-                        完了
+                        {transition.submission?.formData.get(
+                          "complete",
+                        ) === todo._id ? (
+                          <Box>
+                            <Spinner size={"xs"} />
+                          </Box>
+                        ) : (
+                          "完了"
+                        )}
                       </Button>
                     </Form>
                     <Form method="post" action="api/delete">
@@ -130,7 +149,15 @@ const Index: VFC = () => {
                         name="deleteBtn"
                         value={todo._id}
                       >
-                        削除
+                        {transition.submission?.formData.get(
+                          "deleteBtn",
+                        ) === todo._id ? (
+                          <Box>
+                            <Spinner size={"xs"} />
+                          </Box>
+                        ) : (
+                          "削除"
+                        )}
                       </Button>
                     </Form>
                   </HStack>
@@ -155,7 +182,15 @@ const Index: VFC = () => {
                         name="complete"
                         value={todo._id}
                       >
-                        戻す
+                        {transition.submission?.formData.get(
+                          "complete",
+                        ) === todo._id ? (
+                          <Box>
+                            <Spinner size={"xs"} />
+                          </Box>
+                        ) : (
+                          "戻す"
+                        )}
                       </Button>
                     </Form>
                   </HStack>

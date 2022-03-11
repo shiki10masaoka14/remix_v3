@@ -4,6 +4,8 @@ module.exports = {
     "@remix-run/eslint-config",
     "prettier",
   ],
-  rules: {},
+  rules: {
+    "react/jsx-key": "error",
+  },
   ignorePatterns: [".eslintrc.js"],
 };

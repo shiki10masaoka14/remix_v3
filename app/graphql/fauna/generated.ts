@@ -21,9 +21,13 @@ export type Scalars = {
 export type Mutation = {
   __typename?: 'Mutation';
   createTodo: Todo;
-  updateTodo?: Maybe<Todo>;
-  deleteTodo?: Maybe<Todo>;
+  createPeople: People;
   partialUpdateTodo?: Maybe<Todo>;
+  deletePeople?: Maybe<People>;
+  deleteTodo?: Maybe<Todo>;
+  updatePeople?: Maybe<People>;
+  partialUpdatePeople?: Maybe<People>;
+  updateTodo?: Maybe<Todo>;
 };
 
 
@@ -32,14 +36,8 @@ export type MutationCreateTodoArgs = {
 };
 
 
-export type MutationUpdateTodoArgs = {
-  id: Scalars['ID'];
-  data: TodoInput;
-};
-
-
-export type MutationDeleteTodoArgs = {
-  id: Scalars['ID'];
+export type MutationCreatePeopleArgs = {
+  data: PeopleInput;
 };
 
 
@@ -48,15 +46,70 @@ export type MutationPartialUpdateTodoArgs = {
   data: PartialUpdateTodoInput;
 };
 
+
+export type MutationDeletePeopleArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationDeleteTodoArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationUpdatePeopleArgs = {
+  id: Scalars['ID'];
+  data: PeopleInput;
+};
+
+
+export type MutationPartialUpdatePeopleArgs = {
+  id: Scalars['ID'];
+  data: PartialUpdatePeopleInput;
+};
+
+
+export type MutationUpdateTodoArgs = {
+  id: Scalars['ID'];
+  data: TodoInput;
+};
+
+export type PartialUpdatePeopleInput = {
+  firstName?: InputMaybe<Scalars['String']>;
+  lastName?: InputMaybe<Scalars['String']>;
+};
+
 export type PartialUpdateTodoInput = {
   task?: InputMaybe<Scalars['String']>;
   completed?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type People = {
+  __typename?: 'People';
+  _id: Scalars['ID'];
+  _ts: Scalars['Long'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+};
+
+export type PeopleInput = {
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+};
+
+export type PeoplePage = {
+  __typename?: 'PeoplePage';
+  data: Array<Maybe<People>>;
+  after?: Maybe<Scalars['String']>;
+  before?: Maybe<Scalars['String']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   findTodoByID?: Maybe<Todo>;
+  findPeopleByID?: Maybe<People>;
   allTodos: TodoPage;
+  allPeople: PeoplePage;
 };
 
 
@@ -65,7 +118,18 @@ export type QueryFindTodoByIdArgs = {
 };
 
 
+export type QueryFindPeopleByIdArgs = {
+  id: Scalars['ID'];
+};
+
+
 export type QueryAllTodosArgs = {
+  _size?: InputMaybe<Scalars['Int']>;
+  _cursor?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryAllPeopleArgs = {
   _size?: InputMaybe<Scalars['Int']>;
   _cursor?: InputMaybe<Scalars['String']>;
 };
@@ -117,6 +181,25 @@ export type DeleteTodoMutationVariables = Exact<{
 
 export type DeleteTodoMutation = { __typename?: 'Mutation', deleteTodo?: { __typename?: 'Todo', _id: string } | null };
 
+export type AllPeopleQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllPeopleQuery = { __typename?: 'Query', allPeople: { __typename?: 'PeoplePage', data: Array<{ __typename?: 'People', _id: string, firstName: string, lastName: string } | null> } };
+
+export type CreatePeopleMutationVariables = Exact<{
+  data: PeopleInput;
+}>;
+
+
+export type CreatePeopleMutation = { __typename?: 'Mutation', createPeople: { __typename?: 'People', _id: string } };
+
+export type DeletePeopleMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeletePeopleMutation = { __typename?: 'Mutation', deletePeople?: { __typename?: 'People', _id: string } | null };
+
 
 export const AllTodosDocument = gql`
     query AllTodos {
@@ -154,6 +237,31 @@ export const DeleteTodoDocument = gql`
   }
 }
     `;
+export const AllPeopleDocument = gql`
+    query AllPeople {
+  allPeople {
+    data {
+      _id
+      firstName
+      lastName
+    }
+  }
+}
+    `;
+export const CreatePeopleDocument = gql`
+    mutation CreatePeople($data: PeopleInput!) {
+  createPeople(data: $data) {
+    _id
+  }
+}
+    `;
+export const DeletePeopleDocument = gql`
+    mutation DeletePeople($id: ID!) {
+  deletePeople(id: $id) {
+    _id
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string) => Promise<T>;
 
@@ -173,6 +281,15 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     DeleteTodo(variables: DeleteTodoMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<DeleteTodoMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<DeleteTodoMutation>(DeleteTodoDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'DeleteTodo');
+    },
+    AllPeople(variables?: AllPeopleQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<AllPeopleQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<AllPeopleQuery>(AllPeopleDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'AllPeople');
+    },
+    CreatePeople(variables: CreatePeopleMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreatePeopleMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<CreatePeopleMutation>(CreatePeopleDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CreatePeople');
+    },
+    DeletePeople(variables: DeletePeopleMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<DeletePeopleMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<DeletePeopleMutation>(DeletePeopleDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'DeletePeople');
     }
   };
 }

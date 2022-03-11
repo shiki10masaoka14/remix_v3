@@ -22,20 +22,11 @@ type Mutation {
     data: TodoInput!
   ): Todo!
 
-  # Update an existing document in the collection of 'Todo'
-  updateTodo(
-    # The 'Todo' document's ID
-    id: ID!
-
-    # 'Todo' input values
-    data: TodoInput!
-  ): Todo
-
-  # Delete an existing document in the collection of 'Todo'
-  deleteTodo(
-    # The 'Todo' document's ID
-    id: ID!
-  ): Todo
+  # Create a new document in the collection of 'People'
+  createPeople(
+    # 'People' input values
+    data: PeopleInput!
+  ): People!
 
   # Partially updates an existing document in the collection of 'Todo'. It only modifies the values that are specified in the arguments. During execution, it verifies that required fields are not set to 'null'.
   partialUpdateTodo(
@@ -45,12 +36,63 @@ type Mutation {
     # 'Todo' input values
     data: PartialUpdateTodoInput!
   ): Todo
+
+  # Delete an existing document in the collection of 'People'
+  deletePeople(
+    # The 'People' document's ID
+    id: ID!
+  ): People
+
+  # Delete an existing document in the collection of 'Todo'
+  deleteTodo(
+    # The 'Todo' document's ID
+    id: ID!
+  ): Todo
+
+  # Update an existing document in the collection of 'People'
+  updatePeople(
+    # The 'People' document's ID
+    id: ID!
+
+    # 'People' input values
+    data: PeopleInput!
+  ): People
+
+  # Partially updates an existing document in the collection of 'People'. It only modifies the values that are specified in the arguments. During execution, it verifies that required fields are not set to 'null'.
+  partialUpdatePeople(
+    # The 'People' document's ID
+    id: ID!
+
+    # 'People' input values
+    data: PartialUpdatePeopleInput!
+  ): People
+
+  # Update an existing document in the collection of 'Todo'
+  updateTodo(
+    # The 'Todo' document's ID
+    id: ID!
+
+    # 'Todo' input values
+    data: TodoInput!
+  ): Todo
+}
+
+# 'People' input values
+input PartialUpdatePeopleInput {
+  firstName: String
+  lastName: String
 }
 
 # 'Todo' input values
 input PartialUpdateTodoInput {
   task: String
   completed: Boolean
+}
+
+# 'People' input values
+input PeopleInput {
+  firstName: String!
+  lastName: String!
 }
 
 scalar Time
@@ -61,12 +103,40 @@ input TodoInput {
   completed: Boolean!
 }
 
+type People {
+  # The document's ID.
+  _id: ID!
+
+  # The document's timestamp.
+  _ts: Long!
+  firstName: String!
+  lastName: String!
+}
+
+# The pagination object for elements of type 'People'.
+type PeoplePage {
+  # The elements of type 'People' in this page.
+  data: [People]!
+
+  # A cursor for elements coming after the current page.
+  after: String
+
+  # A cursor for elements coming before the current page.
+  before: String
+}
+
 type Query {
   # Find a document from the collection of 'Todo' by its id.
   findTodoByID(
     # The 'Todo' document's ID
     id: ID!
   ): Todo
+
+  # Find a document from the collection of 'People' by its id.
+  findPeopleByID(
+    # The 'People' document's ID
+    id: ID!
+  ): People
   allTodos(
     # The number of items to return per page.
     _size: Int
@@ -74,6 +144,13 @@ type Query {
     # The pagination cursor.
     _cursor: String
   ): TodoPage!
+  allPeople(
+    # The number of items to return per page.
+    _size: Int
+
+    # The pagination cursor.
+    _cursor: String
+  ): PeoplePage!
 }
 
 type Todo {

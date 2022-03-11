@@ -32,3 +32,25 @@ mutation DeleteTodo($id: ID!) {
     _id
   }
 }
+
+query AllPeople {
+  allPeople {
+    data {
+      _id
+      firstName
+      lastName
+    }
+  }
+}
+
+mutation CreatePeople($data: PeopleInput!) {
+  createPeople(data: $data) {
+    _id
+  }
+}
+
+mutation DeletePeople($id: ID!) {
+  deletePeople(id: $id) {
+    _id
+  }
+}

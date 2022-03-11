@@ -3,6 +3,12 @@ type Todo {
   completed: Boolean!
 }
 
+type People {
+  firstName: String!
+  lastName: String!
+}
+
 type Query {
   allTodos: [Todo]
+  allPeople: [People]
 }

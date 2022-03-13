@@ -8,6 +8,7 @@ const Index: VFC = () => {
       <Link to={"/practice"}>practice</Link>
       <Link to={"/test"}>test</Link>
       <Link to={"/newsletter"}>newsletter</Link>
+      <Link to={"/framerMotion"}>framer motion</Link>
     </VStack>
   );
 };

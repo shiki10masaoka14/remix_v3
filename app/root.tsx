@@ -31,7 +31,7 @@ function Document({
         <Meta />
         <title>{title}</title>
         <Links />
-        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="shortcut icon" href="/music.ico" />
       </head>
       <body>
         {children}

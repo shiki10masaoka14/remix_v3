@@ -12,4 +12,7 @@ declare global {
   const ACCESS_TOKEN: string;
   const FAUNA_SECRET_KEY: string;
   const FAUNA_ENDPOINT: string;
+  const CONVERTKIT_ENDPOINT: string;
+  const CONVERTKIT_API: string;
+  const CONVERTKIT_FORM_ID: string;
 }

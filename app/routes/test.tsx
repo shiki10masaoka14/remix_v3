@@ -1,18 +1,20 @@
-import { VFC } from "react";
-import { LoaderFunction, useLoaderData } from "remix";
-import { AllPeopleDocument } from "~/graphql/fauna/generated";
-import { faunaResolver } from "~/graphql/fauna/resolver";
-
-export const loader: LoaderFunction = async () => {
-  return await faunaResolver(
-    AllPeopleDocument.loc?.source.body,
-  );
-};
+import { Box, Text } from "@chakra-ui/react";
+import { useEffect, useRef, useState, VFC } from "react";
 
 const Test: VFC = () => {
-  const testData = useLoaderData();
-  console.log(testData);
+  const [height, setHeight] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
 
-  return <>test</>;
+  useEffect(() => {
+    setHeight(Number(ref.current?.clientHeight));
+  }, [ref]);
+
+  return (
+    <>
+      <Box minH={300} bg={"coral"} ref={ref} p={10}>
+        <Text>{height}px</Text>
+      </Box>
+    </>
+  );
 };
 export default Test;

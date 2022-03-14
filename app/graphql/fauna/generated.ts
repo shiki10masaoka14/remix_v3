@@ -22,11 +22,15 @@ export type Mutation = {
   __typename?: 'Mutation';
   createTodo: Todo;
   createPeople: People;
+  updatePizza?: Maybe<Pizza>;
+  partialUpdatePizza?: Maybe<Pizza>;
   partialUpdateTodo?: Maybe<Todo>;
+  deletePizza?: Maybe<Pizza>;
   deletePeople?: Maybe<People>;
   deleteTodo?: Maybe<Todo>;
   updatePeople?: Maybe<People>;
   partialUpdatePeople?: Maybe<People>;
+  createPizza: Pizza;
   updateTodo?: Maybe<Todo>;
 };
 
@@ -41,9 +45,26 @@ export type MutationCreatePeopleArgs = {
 };
 
 
+export type MutationUpdatePizzaArgs = {
+  id: Scalars['ID'];
+  data: PizzaInput;
+};
+
+
+export type MutationPartialUpdatePizzaArgs = {
+  id: Scalars['ID'];
+  data: PartialUpdatePizzaInput;
+};
+
+
 export type MutationPartialUpdateTodoArgs = {
   id: Scalars['ID'];
   data: PartialUpdateTodoInput;
+};
+
+
+export type MutationDeletePizzaArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -69,6 +90,11 @@ export type MutationPartialUpdatePeopleArgs = {
 };
 
 
+export type MutationCreatePizzaArgs = {
+  data: PizzaInput;
+};
+
+
 export type MutationUpdateTodoArgs = {
   id: Scalars['ID'];
   data: TodoInput;
@@ -77,6 +103,11 @@ export type MutationUpdateTodoArgs = {
 export type PartialUpdatePeopleInput = {
   firstName?: InputMaybe<Scalars['String']>;
   lastName?: InputMaybe<Scalars['String']>;
+};
+
+export type PartialUpdatePizzaInput = {
+  base?: InputMaybe<Scalars['String']>;
+  toppings?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type PartialUpdateTodoInput = {
@@ -104,22 +135,40 @@ export type PeoplePage = {
   before?: Maybe<Scalars['String']>;
 };
 
+export type Pizza = {
+  __typename?: 'Pizza';
+  _id: Scalars['ID'];
+  _ts: Scalars['Long'];
+  base?: Maybe<Scalars['String']>;
+  toppings?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
+export type PizzaInput = {
+  base?: InputMaybe<Scalars['String']>;
+  toppings?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type PizzaPage = {
+  __typename?: 'PizzaPage';
+  data: Array<Maybe<Pizza>>;
+  after?: Maybe<Scalars['String']>;
+  before?: Maybe<Scalars['String']>;
+};
+
 export type Query = {
   __typename?: 'Query';
-  findTodoByID?: Maybe<Todo>;
-  findPeopleByID?: Maybe<People>;
-  allTodos: TodoPage;
   allPeople: PeoplePage;
+  allTodos: TodoPage;
+  findPizzaByID?: Maybe<Pizza>;
+  findTodoByID?: Maybe<Todo>;
+  allPizza: PizzaPage;
+  findPeopleByID?: Maybe<People>;
 };
 
 
-export type QueryFindTodoByIdArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QueryFindPeopleByIdArgs = {
-  id: Scalars['ID'];
+export type QueryAllPeopleArgs = {
+  _size?: InputMaybe<Scalars['Int']>;
+  _cursor?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -129,9 +178,24 @@ export type QueryAllTodosArgs = {
 };
 
 
-export type QueryAllPeopleArgs = {
+export type QueryFindPizzaByIdArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryFindTodoByIdArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryAllPizzaArgs = {
   _size?: InputMaybe<Scalars['Int']>;
   _cursor?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryFindPeopleByIdArgs = {
+  id: Scalars['ID'];
 };
 
 export type Todo = {
@@ -200,6 +264,21 @@ export type DeletePeopleMutationVariables = Exact<{
 
 export type DeletePeopleMutation = { __typename?: 'Mutation', deletePeople?: { __typename?: 'People', _id: string } | null };
 
+export type CreatePizzaMutationVariables = Exact<{
+  data: PizzaInput;
+}>;
+
+
+export type CreatePizzaMutation = { __typename?: 'Mutation', createPizza: { __typename?: 'Pizza', _id: string } };
+
+export type PartialUpdatePizzaMutationVariables = Exact<{
+  id: Scalars['ID'];
+  data: PartialUpdatePizzaInput;
+}>;
+
+
+export type PartialUpdatePizzaMutation = { __typename?: 'Mutation', partialUpdatePizza?: { __typename?: 'Pizza', _id: string } | null };
+
 
 export const AllTodosDocument = gql`
     query AllTodos {
@@ -262,6 +341,20 @@ export const DeletePeopleDocument = gql`
   }
 }
     `;
+export const CreatePizzaDocument = gql`
+    mutation CreatePizza($data: PizzaInput!) {
+  createPizza(data: $data) {
+    _id
+  }
+}
+    `;
+export const PartialUpdatePizzaDocument = gql`
+    mutation PartialUpdatePizza($id: ID!, $data: PartialUpdatePizzaInput!) {
+  partialUpdatePizza(id: $id, data: $data) {
+    _id
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string) => Promise<T>;
 
@@ -290,6 +383,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     DeletePeople(variables: DeletePeopleMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<DeletePeopleMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<DeletePeopleMutation>(DeletePeopleDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'DeletePeople');
+    },
+    CreatePizza(variables: CreatePizzaMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreatePizzaMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<CreatePizzaMutation>(CreatePizzaDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CreatePizza');
+    },
+    PartialUpdatePizza(variables: PartialUpdatePizzaMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<PartialUpdatePizzaMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<PartialUpdatePizzaMutation>(PartialUpdatePizzaDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'PartialUpdatePizza');
     }
   };
 }

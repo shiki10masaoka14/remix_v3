@@ -1,3 +1,4 @@
+import theme from "./utils/theme";
 import {
   ChakraProvider,
   Heading,
@@ -48,7 +49,7 @@ function Document({
 export default function App() {
   return (
     <Document>
-      <ChakraProvider>
+      <ChakraProvider theme={theme}>
         <Outlet />
       </ChakraProvider>
     </Document>

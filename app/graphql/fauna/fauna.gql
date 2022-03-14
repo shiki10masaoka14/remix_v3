@@ -54,3 +54,18 @@ mutation DeletePeople($id: ID!) {
     _id
   }
 }
+
+mutation CreatePizza($data: PizzaInput!) {
+  createPizza(data: $data) {
+    _id
+  }
+}
+
+mutation PartialUpdatePizza(
+  $id: ID!
+  $data: PartialUpdatePizzaInput!
+) {
+  partialUpdatePizza(id: $id, data: $data) {
+    _id
+  }
+}

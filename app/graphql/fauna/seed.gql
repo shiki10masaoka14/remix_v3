@@ -8,7 +8,13 @@ type People {
   lastName: String!
 }
 
+type Pizza {
+  base: String
+  toppings: [String]
+}
+
 type Query {
   allTodos: [Todo]
   allPeople: [People]
+  allPizza: [Pizza]
 }

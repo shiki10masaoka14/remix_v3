@@ -69,3 +69,11 @@ mutation PartialUpdatePizza(
     _id
   }
 }
+
+query FindPizzaByID($id: ID!) {
+  findPizzaByID(id: $id) {
+    _id
+    base
+    toppings
+  }
+}

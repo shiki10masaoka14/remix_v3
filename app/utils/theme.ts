@@ -6,6 +6,17 @@ const theme = extendTheme({
       ".chakra-divider": {
         borderColor: "rgba(0, 0, 0, 0.3) !important",
       },
+      // ".chakra-checkbox": {
+      //   borderColor: "black",
+      //   _focus: {
+      //     boxShadow: "none",
+      //   },
+      //   _checked: {
+      //     _focus: {
+      //       boxShadow: "none",
+      //     },
+      //   },
+      // },
     },
   },
   components: {
@@ -26,9 +37,16 @@ const theme = extendTheme({
         },
       },
     },
-    Divider: {
-      colorScheme: {
-        borderColor: "black",
+    Checkbox: {
+      baseStyle: {
+        control: {
+          borderColor: "black",
+          _checked: {
+            bg: "black",
+            borderColor: "black",
+          },
+          _focus: { boxShadow: "none" },
+        },
       },
     },
   },

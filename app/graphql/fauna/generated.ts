@@ -279,6 +279,13 @@ export type PartialUpdatePizzaMutationVariables = Exact<{
 
 export type PartialUpdatePizzaMutation = { __typename?: 'Mutation', partialUpdatePizza?: { __typename?: 'Pizza', _id: string } | null };
 
+export type FindPizzaByIdQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type FindPizzaByIdQuery = { __typename?: 'Query', findPizzaByID?: { __typename?: 'Pizza', _id: string, base?: string | null, toppings?: Array<string | null> | null } | null };
+
 
 export const AllTodosDocument = gql`
     query AllTodos {
@@ -355,6 +362,15 @@ export const PartialUpdatePizzaDocument = gql`
   }
 }
     `;
+export const FindPizzaByIdDocument = gql`
+    query FindPizzaByID($id: ID!) {
+  findPizzaByID(id: $id) {
+    _id
+    base
+    toppings
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string) => Promise<T>;
 
@@ -389,6 +405,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     PartialUpdatePizza(variables: PartialUpdatePizzaMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<PartialUpdatePizzaMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<PartialUpdatePizzaMutation>(PartialUpdatePizzaDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'PartialUpdatePizza');
+    },
+    FindPizzaByID(variables: FindPizzaByIdQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FindPizzaByIdQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<FindPizzaByIdQuery>(FindPizzaByIdDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'FindPizzaByID');
     }
   };
 }

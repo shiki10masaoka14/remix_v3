@@ -1,18 +1,17 @@
 import Header from "./Header";
+import { containerVariants } from "./base";
 import {
+  Box,
+  BoxProps,
   Button,
+  ButtonProps,
   Center,
   Checkbox,
-  CheckboxGroup,
-  Text,
+  VStack,
 } from "@chakra-ui/react";
-import {
-  useState,
-  VFC,
-  MouseEvent,
-  ChangeEvent,
-} from "react";
-import { ActionFunction, Form } from "remix";
+import { motion, Transition } from "framer-motion";
+import { VFC } from "react";
+import { ActionFunction, Form, redirect } from "remix";
 import { PartialUpdatePizzaDocument } from "~/graphql/fauna/generated";
 import { faunaResolver } from "~/graphql/fauna/resolver";
 import { userPrefs } from "~/utils/cookies";
@@ -28,7 +27,9 @@ export const action: ActionFunction = async ({
 }) => {
   const formData = await request.formData();
   const value = Object.fromEntries(formData);
-  const { mushrooms, peppers } = value;
+  const arrayVal = Object.keys(value).map(
+    (key) => value[key],
+  );
 
   const cookieHeader = request.headers.get("Cookie");
   const cookie =
@@ -39,12 +40,12 @@ export const action: ActionFunction = async ({
     {
       id: cookie.pizzaId,
       data: {
-        toppings: [mushrooms, peppers],
+        toppings: arrayVal,
       },
     },
   );
 
-  return null;
+  return redirect("/framerMotion/order");
 };
 
 // ここまで
@@ -52,6 +53,9 @@ export const action: ActionFunction = async ({
 //
 //
 // ここから
+
+const MotionBox = motion<BoxProps | Transition>(Box);
+const MotionButton = motion<ButtonProps>(Button);
 
 const Toppings: VFC = () => {
   const toppings = [
@@ -70,26 +74,52 @@ const Toppings: VFC = () => {
   // ここから
 
   return (
-    <>
-      <Header>
-        <Center minH={"100vh"}>
+    <Header>
+      <Center minH={"100vh"}>
+        <MotionBox
+          variants={containerVariants}
+          initial={"hidden"}
+          animate={"visible"}
+        >
           <Form method="post">
-            <CheckboxGroup>
-              <Checkbox
-                value={"mushrooms"}
-                name="mushrooms"
-              >
-                mushrooms
-              </Checkbox>
-              <Checkbox value={"peppers"} name="peppers">
-                peppers
-              </Checkbox>
-            </CheckboxGroup>
-            <Button type="submit">send</Button>
+            <VStack align={"start"} mb={6}>
+              {toppings.map((topping) => (
+                <MotionBox
+                  key={topping}
+                  transition={{
+                    type: "spring",
+                    stiffness: 300,
+                  }}
+                  whileHover={{
+                    scale: 1.3,
+                    originX: 0,
+                  }}
+                >
+                  <Checkbox
+                    name={topping}
+                    value={topping}
+                    _hover={{ color: "red.300" }}
+                  >
+                    {topping}
+                  </Checkbox>
+                </MotionBox>
+              ))}
+            </VStack>
+            <MotionButton
+              variant={"outline"}
+              type="submit"
+              whileHover={{
+                scale: 1.1,
+                textShadow: "0px 0px 8px gray",
+                boxShadow: "0px 0px 8px gray",
+              }}
+            >
+              send
+            </MotionButton>
           </Form>
-        </Center>
-      </Header>
-    </>
+        </MotionBox>
+      </Center>
+    </Header>
   );
 };
 export default Toppings;

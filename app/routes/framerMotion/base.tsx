@@ -58,6 +58,30 @@ export const action: ActionFunction = async ({
 const MotionBox = motion<BoxProps | Transition>(Box);
 const MotionButton = motion<ButtonProps>(Button);
 
+export const containerVariants = {
+  hidden: {
+    opacity: 0,
+    x: "100vw",
+  },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      type: "spring",
+      delay: 0.5,
+    },
+  },
+};
+export const nextVariants = {
+  hidden: {
+    x: "-100vw",
+  },
+  visible: {
+    x: 0,
+    transition: { type: "spring", stiffness: 120 },
+  },
+};
+
 // ここまで
 //
 //
@@ -72,9 +96,9 @@ const Base: VFC = () => {
     <Header>
       <Center minH={"100vh"}>
         <MotionBox
-          initial={{ x: "100vw" }}
-          animate={{ x: 0 }}
-          transition={{ type: "spring", delay: 0.5 }}
+          variants={containerVariants}
+          initial={"hidden"}
+          animate={"visible"}
         >
           <Container maxW={"container.sm"}>
             <Heading size={"md"} mb={2}>
@@ -121,14 +145,7 @@ const Base: VFC = () => {
             </VStack>
             {baseVal && (
               <Form method="post">
-                <MotionBox
-                  initial={{ x: "-100vw" }}
-                  animate={{ x: 0 }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 120,
-                  }}
-                >
+                <MotionBox variants={nextVariants}>
                   <MotionButton
                     variant={"outline"}
                     whileHover={{

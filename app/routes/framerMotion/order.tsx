@@ -10,7 +10,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState, VFC } from "react";
+import { VFC } from "react";
 import {
   ActionFunction,
   createCookie,
@@ -67,6 +67,11 @@ export const action: ActionFunction = async ({
   const cookie =
     (await userPrefs.parse(cookieHeader)) || {};
 
+  const sleep = (ms: number) =>
+    new Promise((res) => setTimeout(res, ms));
+
+  await sleep(100);
+
   await faunaResolver(
     DeletePizzaDocument.loc?.source.body,
     {
@@ -107,7 +112,6 @@ const containerVariants = {
   },
   exit: {
     opacity: 0,
-    transition: { duration: 5 },
   },
 };
 const childVariants = {
@@ -131,7 +135,6 @@ const childVariants = {
 const Order: VFC = () => {
   const { findPizzaByID: orderPizza } =
     useLoaderData() as FindPizzaByIdQuery;
-  // const [isPending, setIsPending] = useState(true);
   const { isPending } = usePageTransition("/framerMotion");
 
   return (
@@ -175,7 +178,6 @@ const Order: VFC = () => {
                   variant={"ghost"}
                   variants={buttonVariants}
                   whileHover={"hover"}
-                  // onClick={() => setIsPending(false)}
                 >
                   back
                 </MotionButton>

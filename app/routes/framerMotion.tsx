@@ -97,7 +97,7 @@ const FramerMotion: VFC = () => {
           transition={{
             delay: 0.2,
             type: "spring",
-            stiffness: 12,
+            stiffness: 120,
           }}
         >
           <Link to={"/framerMotion"}>

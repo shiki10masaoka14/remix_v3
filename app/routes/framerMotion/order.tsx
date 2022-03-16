@@ -1,8 +1,10 @@
+import { buttonVariants } from ".";
 import Header from "./Header";
 import {
   Box,
   BoxProps,
   Button,
+  ButtonProps,
   Center,
   Heading,
   Text,
@@ -78,6 +80,7 @@ export const action: ActionFunction = async ({
 // ここから
 
 const MotionBox = motion<BoxProps>(Box);
+const MotionButton = motion<ButtonProps>(Button);
 
 const containerVariants = {
   hidden: {
@@ -137,7 +140,7 @@ const Order: VFC = () => {
               </Text>
             </MotionBox>
             <MotionBox variants={childVariants}>
-              <VStack spacing={-1}>
+              <VStack spacing={-1} mb={8}>
                 {orderPizza?.toppings?.map((topping) => (
                   <Text
                     key={topping}
@@ -149,9 +152,16 @@ const Order: VFC = () => {
               </VStack>
             </MotionBox>
             <Form method="post">
-              <Button type="submit" variant={"ghost"}>
-                back
-              </Button>
+              <Center>
+                <MotionButton
+                  type="submit"
+                  variant={"ghost"}
+                  variants={buttonVariants}
+                  whileHover={"hover"}
+                >
+                  back
+                </MotionButton>
+              </Center>
             </Form>
           </MotionBox>
         </Center>

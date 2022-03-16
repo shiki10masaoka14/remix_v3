@@ -1,3 +1,4 @@
+import { buttonVariants } from ".";
 import Header from "./Header";
 import {
   Box,
@@ -148,11 +149,8 @@ const Base: VFC = () => {
                 <MotionBox variants={nextVariants}>
                   <MotionButton
                     variant={"outline"}
-                    whileHover={{
-                      scale: 1.1,
-                      textShadow: "0px 0px 8px gray",
-                      boxShadow: "0px 0px 8px gray",
-                    }}
+                    variants={buttonVariants}
+                    whileHover={"hover"}
                     type={"submit"}
                     name="base"
                     value={String(baseVal)}

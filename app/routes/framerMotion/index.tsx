@@ -56,6 +56,23 @@ const MotionButton = motion<ButtonProps>(Button);
 const MotionContainer = motion<ContainerProps | Transition>(
   Container,
 );
+export const buttonVariants = {
+  hover: {
+    scale: 1.1,
+    textShadow: "0px 0px 8px gray",
+    boxShadow: "0px 0px 8px gray",
+    transition: {
+      duration: 0.3,
+      yoyo: Infinity,
+    },
+  },
+};
+
+// ここまで
+//
+//
+//
+// ここから
 
 const FramerMotion: VFC = () => {
   return (
@@ -71,11 +88,8 @@ const FramerMotion: VFC = () => {
             <Form method="post">
               <MotionButton
                 type="submit"
-                whileHover={{
-                  scale: 1.1,
-                  textShadow: "0px 0px 8px gray",
-                  boxShadow: "0px 0px 8px gray",
-                }}
+                variants={buttonVariants}
+                whileHover={"hover"}
                 variant={"outline"}
               >
                 Create Your Pizza

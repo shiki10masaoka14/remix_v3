@@ -1,3 +1,4 @@
+import { buttonVariants } from ".";
 import Header from "./Header";
 import { containerVariants } from "./base";
 import {
@@ -107,12 +108,9 @@ const Toppings: VFC = () => {
             </VStack>
             <MotionButton
               variant={"outline"}
+              variants={buttonVariants}
               type="submit"
-              whileHover={{
-                scale: 1.1,
-                textShadow: "0px 0px 8px gray",
-                boxShadow: "0px 0px 8px gray",
-              }}
+              whileHover={"hover"}
             >
               send
             </MotionButton>

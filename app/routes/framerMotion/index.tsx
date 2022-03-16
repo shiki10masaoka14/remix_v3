@@ -1,4 +1,7 @@
-import { buttonVariants } from "../framerMotion";
+import {
+  buttonVariants,
+  containerVariants,
+} from "../framerMotion";
 import {
   Button,
   ButtonProps,
@@ -67,9 +70,9 @@ const Index: VFC = () => {
   return (
     <Center minH={"100vh"}>
       <MotionContainer
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1, duration: 1.5 }}
+        variants={containerVariants}
+        initial={"hidden"}
+        animate={"visible"}
       >
         <VStack spacing={6}>
           <Heading>Welcome to Pizza Joint</Heading>

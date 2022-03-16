@@ -1,7 +1,4 @@
-import {
-  buttonVariants,
-  containerVariants,
-} from "../framerMotion";
+import { buttonVariants } from "../framerMotion";
 import {
   Button,
   ButtonProps,
@@ -11,11 +8,16 @@ import {
   Heading,
   VStack,
 } from "@chakra-ui/react";
-import { motion, Transition } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  Transition,
+} from "framer-motion";
 import { VFC } from "react";
 import { ActionFunction, Form, redirect } from "remix";
 import { CreatePizzaDocument } from "~/graphql/fauna/generated";
 import { faunaResolver } from "~/graphql/fauna/resolver";
+import { usePageTransition } from "~/hooks/usePageTransition";
 import { userPrefs } from "~/utils/cookies";
 
 // ここまで
@@ -59,6 +61,20 @@ const MotionButton = motion<ButtonProps>(Button);
 const MotionContainer = motion<ContainerProps | Transition>(
   Container,
 );
+const containerVariants = {
+  hidden: {
+    opacity: 0,
+  },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { delay: 1.5, duration: 1.5 },
+  },
+  exit: {
+    x: "-100vw",
+    transition: { duration: 1 },
+  },
+};
 
 // ここまで
 //
@@ -67,27 +83,36 @@ const MotionContainer = motion<ContainerProps | Transition>(
 // ここから
 
 const Index: VFC = () => {
+  const { isPending } = usePageTransition(
+    "/framerMotion/base",
+  );
+
   return (
     <Center minH={"100vh"}>
-      <MotionContainer
-        variants={containerVariants}
-        initial={"hidden"}
-        animate={"visible"}
-      >
-        <VStack spacing={6}>
-          <Heading>Welcome to Pizza Joint</Heading>
-          <Form method="post">
-            <MotionButton
-              type="submit"
-              variants={buttonVariants}
-              whileHover={"hover"}
-              variant={"outline"}
-            >
-              Create Your Pizza
-            </MotionButton>
-          </Form>
-        </VStack>
-      </MotionContainer>
+      <AnimatePresence>
+        {isPending && (
+          <MotionContainer
+            variants={containerVariants}
+            initial={"hidden"}
+            animate={"visible"}
+            exit={"exit"}
+          >
+            <VStack spacing={6}>
+              <Heading>Welcome to Pizza Joint</Heading>
+              <Form method="post">
+                <MotionButton
+                  type="submit"
+                  variants={buttonVariants}
+                  whileHover={"hover"}
+                  variant={"outline"}
+                >
+                  Create Your Pizza
+                </MotionButton>
+              </Form>
+            </VStack>
+          </MotionContainer>
+        )}
+      </AnimatePresence>
     </Center>
   );
 };

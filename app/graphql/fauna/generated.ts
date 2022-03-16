@@ -286,6 +286,13 @@ export type FindPizzaByIdQueryVariables = Exact<{
 
 export type FindPizzaByIdQuery = { __typename?: 'Query', findPizzaByID?: { __typename?: 'Pizza', _id: string, base?: string | null, toppings?: Array<string | null> | null } | null };
 
+export type DeletePizzaMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeletePizzaMutation = { __typename?: 'Mutation', deletePizza?: { __typename?: 'Pizza', _id: string } | null };
+
 
 export const AllTodosDocument = gql`
     query AllTodos {
@@ -371,6 +378,13 @@ export const FindPizzaByIdDocument = gql`
   }
 }
     `;
+export const DeletePizzaDocument = gql`
+    mutation DeletePizza($id: ID!) {
+  deletePizza(id: $id) {
+    _id
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string) => Promise<T>;
 
@@ -408,6 +422,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     FindPizzaByID(variables: FindPizzaByIdQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FindPizzaByIdQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<FindPizzaByIdQuery>(FindPizzaByIdDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'FindPizzaByID');
+    },
+    DeletePizza(variables: DeletePizzaMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<DeletePizzaMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<DeletePizzaMutation>(DeletePizzaDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'DeletePizza');
     }
   };
 }

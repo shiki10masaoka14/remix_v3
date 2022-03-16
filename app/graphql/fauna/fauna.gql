@@ -77,3 +77,9 @@ query FindPizzaByID($id: ID!) {
     toppings
   }
 }
+
+mutation DeletePizza($id: ID!) {
+  deletePizza(id: $id) {
+    _id
+  }
+}

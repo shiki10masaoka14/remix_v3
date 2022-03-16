@@ -5,13 +5,9 @@ import {
   Heading,
   Icon,
 } from "@chakra-ui/react";
-import {
-  AnimatePresence,
-  motion,
-  Transition,
-} from "framer-motion";
+import { motion, Transition } from "framer-motion";
 import { VFC } from "react";
-import { Link, Outlet, useTransition } from "remix";
+import { Link, Outlet } from "remix";
 
 // ここまで
 //
@@ -32,15 +28,6 @@ export const buttonVariants = {
     },
   },
 };
-export const containerVariants = {
-  hidden: {
-    opacity: 0,
-  },
-  visible: {
-    opacity: 1,
-    transition: { delay: 1.5, duration: 1.5 },
-  },
-};
 
 // ここまで
 //
@@ -49,13 +36,6 @@ export const containerVariants = {
 // ここから
 
 const FramerMotion: VFC = () => {
-  const transition = useTransition();
-  const isPending =
-    transition.state === "loading" ||
-    transition.state === "idle";
-
-  console.log(isPending);
-
   return (
     <Box
       minH={"100vh"}
@@ -105,22 +85,7 @@ const FramerMotion: VFC = () => {
           </Link>
         </MotionBox>
       </Flex>
-      <AnimatePresence>
-        {isPending && (
-          <MotionBox
-            animate={{
-              x: 0,
-              transition: { ease: "easeInOut" },
-            }}
-            exit={{
-              x: "-100vh",
-              transition: { ease: "easeInOut" },
-            }}
-          >
-            <Outlet />
-          </MotionBox>
-        )}
-      </AnimatePresence>
+      <Outlet />
     </Box>
   );
 };

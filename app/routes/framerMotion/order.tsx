@@ -9,8 +9,8 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { motion } from "framer-motion";
-import { VFC } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useState, VFC } from "react";
 import {
   ActionFunction,
   createCookie,
@@ -20,10 +20,12 @@ import {
   useLoaderData,
 } from "remix";
 import {
+  DeletePizzaDocument,
   FindPizzaByIdDocument,
   FindPizzaByIdQuery,
 } from "~/graphql/fauna/generated";
 import { faunaResolver } from "~/graphql/fauna/resolver";
+import { usePageTransition } from "~/hooks/usePageTransition";
 import { userPrefs } from "~/utils/cookies";
 
 // ここまで
@@ -65,6 +67,13 @@ export const action: ActionFunction = async ({
   const cookie =
     (await userPrefs.parse(cookieHeader)) || {};
 
+  await faunaResolver(
+    DeletePizzaDocument.loc?.source.body,
+    {
+      id: cookie.pizzaId,
+    },
+  );
+
   return redirect("/framerMotion", {
     headers: {
       "Set-Cookie": await userPrefs.serialize(cookie),
@@ -90,12 +99,15 @@ const containerVariants = {
     opacity: 1,
     x: 0,
     transition: {
+      duration: 1.5,
       type: "spring",
-      mass: 0.4,
-      damping: 8,
       when: "beforeChildren",
       staggerChildren: 0.4,
     },
+  },
+  exit: {
+    opacity: 0,
+    transition: { duration: 5 },
   },
 };
 const childVariants = {
@@ -104,6 +116,9 @@ const childVariants = {
   },
   visible: {
     opacity: 1,
+  },
+  exit: {
+    opacity: 0,
   },
 };
 
@@ -116,50 +131,60 @@ const childVariants = {
 const Order: VFC = () => {
   const { findPizzaByID: orderPizza } =
     useLoaderData() as FindPizzaByIdQuery;
+  // const [isPending, setIsPending] = useState(true);
+  const { isPending } = usePageTransition("/framerMotion");
 
   return (
-    <>
-      <Center minH={"100vh"}>
-        <MotionBox
-          variants={containerVariants}
-          initial={"hidden"}
-          animate={"visible"}
-        >
-          <Heading size={"md"} mb={6} textAlign={"center"}>
-            Thank you for your order
-          </Heading>
-          <MotionBox variants={childVariants}>
-            <Text mb={4} textAlign={"center"}>
-              You ordered a {orderPizza?.base} pizza whit:
-            </Text>
-          </MotionBox>
-          <MotionBox variants={childVariants}>
-            <VStack spacing={-1} mb={8}>
-              {orderPizza?.toppings?.map((topping) => (
-                <Text
-                  key={topping}
-                  color={"blackAlpha.600"}
+    <Center minH={"100vh"}>
+      <AnimatePresence>
+        {isPending && (
+          <MotionBox
+            variants={containerVariants}
+            initial={"hidden"}
+            animate={"visible"}
+            exit={"exit"}
+          >
+            <Heading
+              size={"md"}
+              mb={6}
+              textAlign={"center"}
+            >
+              Thank you for your order
+            </Heading>
+            <MotionBox variants={childVariants}>
+              <Text mb={4} textAlign={"center"}>
+                You ordered a {orderPizza?.base} pizza whit:
+              </Text>
+            </MotionBox>
+            <MotionBox variants={childVariants}>
+              <VStack spacing={-1} mb={8}>
+                {orderPizza?.toppings?.map((topping) => (
+                  <Text
+                    key={topping}
+                    color={"blackAlpha.600"}
+                  >
+                    {topping}
+                  </Text>
+                ))}
+              </VStack>
+            </MotionBox>
+            <Form method="post">
+              <Center>
+                <MotionButton
+                  type="submit"
+                  variant={"ghost"}
+                  variants={buttonVariants}
+                  whileHover={"hover"}
+                  // onClick={() => setIsPending(false)}
                 >
-                  {topping}
-                </Text>
-              ))}
-            </VStack>
+                  back
+                </MotionButton>
+              </Center>
+            </Form>
           </MotionBox>
-          <Form method="post">
-            <Center>
-              <MotionButton
-                type="submit"
-                variant={"ghost"}
-                variants={buttonVariants}
-                whileHover={"hover"}
-              >
-                back
-              </MotionButton>
-            </Center>
-          </Form>
-        </MotionBox>
-      </Center>
-    </>
+        )}
+      </AnimatePresence>
+    </Center>
   );
 };
 export default Order;

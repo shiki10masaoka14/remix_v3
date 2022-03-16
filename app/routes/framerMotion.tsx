@@ -5,24 +5,57 @@ import {
   Heading,
   Icon,
 } from "@chakra-ui/react";
-import { motion, Transition } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  Transition,
+} from "framer-motion";
 import { VFC } from "react";
-import { Link, Outlet } from "remix";
+import { Link, Outlet, useTransition } from "remix";
+
+// ここまで
+//
+//
+//
+// ここから
 
 const MotionBox = motion<BoxProps | Transition>(Box);
+
 export const buttonVariants = {
   hover: {
     scale: 1.1,
     textShadow: "0px 0px 8px gray",
     boxShadow: "0px 0px 8px gray",
     transition: {
-      duration: 0.3,
-      yoyo: Infinity,
+      duration: 0.5,
+      repeat: Infinity,
     },
   },
 };
+export const containerVariants = {
+  hidden: {
+    opacity: 0,
+  },
+  visible: {
+    opacity: 1,
+    transition: { delay: 1.5, duration: 1.5 },
+  },
+};
+
+// ここまで
+//
+//
+//
+// ここから
 
 const FramerMotion: VFC = () => {
+  const transition = useTransition();
+  const isPending =
+    transition.state === "loading" ||
+    transition.state === "idle";
+
+  console.log(isPending);
+
   return (
     <Box
       minH={"100vh"}
@@ -72,7 +105,22 @@ const FramerMotion: VFC = () => {
           </Link>
         </MotionBox>
       </Flex>
-      <Outlet />
+      <AnimatePresence>
+        {isPending && (
+          <MotionBox
+            animate={{
+              x: 0,
+              transition: { ease: "easeInOut" },
+            }}
+            exit={{
+              x: "-100vh",
+              transition: { ease: "easeInOut" },
+            }}
+          >
+            <Outlet />
+          </MotionBox>
+        )}
+      </AnimatePresence>
     </Box>
   );
 };

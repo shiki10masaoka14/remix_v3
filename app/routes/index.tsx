@@ -6,7 +6,7 @@ const Index: VFC = () => {
   return (
     <VStack mt={6}>
       <Link to={"/practice"}>practice</Link>
-      <Link to={"/test"}>test</Link>
+      <Link to={"/test2"}>test</Link>
       <Link to={"/newsletter"}>newsletter</Link>
       <Link to={"/framerMotion"}>framer motion</Link>
     </VStack>

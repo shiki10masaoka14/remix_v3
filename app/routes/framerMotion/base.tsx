@@ -1,5 +1,3 @@
-import { buttonVariants } from ".";
-import Header from "./Header";
 import {
   Box,
   BoxProps,
@@ -13,6 +11,7 @@ import {
   Icon,
   VStack,
 } from "@chakra-ui/react";
+import { buttonVariants } from "app/routes/framerMotion";
 import { motion, Transition } from "framer-motion";
 import { useState, VFC } from "react";
 import { RiPlayLine } from "react-icons/ri";
@@ -94,76 +93,74 @@ const Base: VFC = () => {
   const [baseVal, setBaseVal] = useState<String>();
 
   return (
-    <Header>
-      <Center minH={"100vh"}>
-        <MotionBox
-          variants={containerVariants}
-          initial={"hidden"}
-          animate={"visible"}
-        >
-          <Container maxW={"container.sm"}>
-            <Heading size={"md"} mb={2}>
-              Step 1: Choose Your Base
-            </Heading>
-            <Divider mb={6} colorScheme={"messenger"} />
-            <VStack
-              mb={!baseVal ? "70px" : "30px"}
-              align={"start"}
-              pl={4}
-            >
-              {bases.map((base) => (
-                <HStack key={base}>
-                  {baseVal === base && (
-                    <Icon as={RiPlayLine} />
-                  )}
-                  <MotionBox
-                    transition={{
-                      type: "spring",
-                      stiffness: 300,
-                    }}
-                    whileHover={{
-                      scale: 1.3,
-                      originX: 0,
-                    }}
+    <Center minH={"100vh"}>
+      <MotionBox
+        variants={containerVariants}
+        initial={"hidden"}
+        animate={"visible"}
+      >
+        <Container maxW={"container.sm"}>
+          <Heading size={"md"} mb={2}>
+            Step 1: Choose Your Base
+          </Heading>
+          <Divider mb={6} colorScheme={"messenger"} />
+          <VStack
+            mb={!baseVal ? "70px" : "30px"}
+            align={"start"}
+            pl={4}
+          >
+            {bases.map((base) => (
+              <HStack key={base}>
+                {baseVal === base && (
+                  <Icon as={RiPlayLine} />
+                )}
+                <MotionBox
+                  transition={{
+                    type: "spring",
+                    stiffness: 300,
+                  }}
+                  whileHover={{
+                    scale: 1.3,
+                    originX: 0,
+                  }}
+                >
+                  <Button
+                    color={
+                      baseVal === base
+                        ? "black"
+                        : "blackAlpha.500"
+                    }
+                    px={0}
+                    _hover={{ color: "red.300" }}
+                    fontWeight={"normal"}
+                    variant={"ghost"}
+                    onClick={() => setBaseVal(base)}
                   >
-                    <Button
-                      color={
-                        baseVal === base
-                          ? "black"
-                          : "blackAlpha.500"
-                      }
-                      px={0}
-                      _hover={{ color: "red.300" }}
-                      fontWeight={"normal"}
-                      variant={"ghost"}
-                      onClick={() => setBaseVal(base)}
-                    >
-                      {base}
-                    </Button>
-                  </MotionBox>
-                </HStack>
-              ))}
-            </VStack>
-            {baseVal && (
-              <Form method="post">
-                <MotionBox variants={nextVariants}>
-                  <MotionButton
-                    variant={"outline"}
-                    variants={buttonVariants}
-                    whileHover={"hover"}
-                    type={"submit"}
-                    name="base"
-                    value={String(baseVal)}
-                  >
-                    Next
-                  </MotionButton>
+                    {base}
+                  </Button>
                 </MotionBox>
-              </Form>
-            )}
-          </Container>
-        </MotionBox>
-      </Center>
-    </Header>
+              </HStack>
+            ))}
+          </VStack>
+          {baseVal && (
+            <Form method="post">
+              <MotionBox variants={nextVariants}>
+                <MotionButton
+                  variant={"outline"}
+                  variants={buttonVariants}
+                  whileHover={"hover"}
+                  type={"submit"}
+                  name="base"
+                  value={String(baseVal)}
+                >
+                  Next
+                </MotionButton>
+              </MotionBox>
+            </Form>
+          )}
+        </Container>
+      </MotionBox>
+    </Center>
   );
 };
 export default Base;

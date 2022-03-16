@@ -1,4 +1,4 @@
-import Header from "./Header";
+import { buttonVariants } from "../framerMotion";
 import {
   Button,
   ButtonProps,
@@ -56,17 +56,6 @@ const MotionButton = motion<ButtonProps>(Button);
 const MotionContainer = motion<ContainerProps | Transition>(
   Container,
 );
-export const buttonVariants = {
-  hover: {
-    scale: 1.1,
-    textShadow: "0px 0px 8px gray",
-    boxShadow: "0px 0px 8px gray",
-    transition: {
-      duration: 0.3,
-      yoyo: Infinity,
-    },
-  },
-};
 
 // ここまで
 //
@@ -74,31 +63,29 @@ export const buttonVariants = {
 //
 // ここから
 
-const FramerMotion: VFC = () => {
+const Index: VFC = () => {
   return (
-    <Header>
-      <Center minH={"100vh"}>
-        <MotionContainer
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 1.5 }}
-        >
-          <VStack spacing={6}>
-            <Heading>Welcome to Pizza Joint</Heading>
-            <Form method="post">
-              <MotionButton
-                type="submit"
-                variants={buttonVariants}
-                whileHover={"hover"}
-                variant={"outline"}
-              >
-                Create Your Pizza
-              </MotionButton>
-            </Form>
-          </VStack>
-        </MotionContainer>
-      </Center>
-    </Header>
+    <Center minH={"100vh"}>
+      <MotionContainer
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1, duration: 1.5 }}
+      >
+        <VStack spacing={6}>
+          <Heading>Welcome to Pizza Joint</Heading>
+          <Form method="post">
+            <MotionButton
+              type="submit"
+              variants={buttonVariants}
+              whileHover={"hover"}
+              variant={"outline"}
+            >
+              Create Your Pizza
+            </MotionButton>
+          </Form>
+        </VStack>
+      </MotionContainer>
+    </Center>
   );
 };
-export default FramerMotion;
+export default Index;

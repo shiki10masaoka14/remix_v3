@@ -1,5 +1,4 @@
 import { buttonVariants } from ".";
-import Header from "./Header";
 import { containerVariants } from "./base";
 import {
   Box,
@@ -75,49 +74,47 @@ const Toppings: VFC = () => {
   // ここから
 
   return (
-    <Header>
-      <Center minH={"100vh"}>
-        <MotionBox
-          variants={containerVariants}
-          initial={"hidden"}
-          animate={"visible"}
-        >
-          <Form method="post">
-            <VStack align={"start"} mb={6}>
-              {toppings.map((topping) => (
-                <MotionBox
-                  key={topping}
-                  transition={{
-                    type: "spring",
-                    stiffness: 300,
-                  }}
-                  whileHover={{
-                    scale: 1.3,
-                    originX: 0,
-                  }}
+    <Center minH={"100vh"}>
+      <MotionBox
+        variants={containerVariants}
+        initial={"hidden"}
+        animate={"visible"}
+      >
+        <Form method="post">
+          <VStack align={"start"} mb={6}>
+            {toppings.map((topping) => (
+              <MotionBox
+                key={topping}
+                transition={{
+                  type: "spring",
+                  stiffness: 300,
+                }}
+                whileHover={{
+                  scale: 1.3,
+                  originX: 0,
+                }}
+              >
+                <Checkbox
+                  name={topping}
+                  value={topping}
+                  _hover={{ color: "red.300" }}
                 >
-                  <Checkbox
-                    name={topping}
-                    value={topping}
-                    _hover={{ color: "red.300" }}
-                  >
-                    {topping}
-                  </Checkbox>
-                </MotionBox>
-              ))}
-            </VStack>
-            <MotionButton
-              variant={"outline"}
-              variants={buttonVariants}
-              type="submit"
-              whileHover={"hover"}
-            >
-              send
-            </MotionButton>
-          </Form>
-        </MotionBox>
-      </Center>
-    </Header>
+                  {topping}
+                </Checkbox>
+              </MotionBox>
+            ))}
+          </VStack>
+          <MotionButton
+            variant={"outline"}
+            variants={buttonVariants}
+            type="submit"
+            whileHover={"hover"}
+          >
+            send
+          </MotionButton>
+        </Form>
+      </MotionBox>
+    </Center>
   );
 };
 export default Toppings;

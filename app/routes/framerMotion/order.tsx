@@ -1,5 +1,4 @@
 import { buttonVariants } from ".";
-import Header from "./Header";
 import {
   Box,
   BoxProps,
@@ -120,52 +119,46 @@ const Order: VFC = () => {
 
   return (
     <>
-      <Header>
-        <Center minH={"100vh"}>
-          <MotionBox
-            variants={containerVariants}
-            initial={"hidden"}
-            animate={"visible"}
-          >
-            <Heading
-              size={"md"}
-              mb={6}
-              textAlign={"center"}
-            >
-              Thank you for your order
-            </Heading>
-            <MotionBox variants={childVariants}>
-              <Text mb={4} textAlign={"center"}>
-                You ordered a {orderPizza?.base} pizza whit:
-              </Text>
-            </MotionBox>
-            <MotionBox variants={childVariants}>
-              <VStack spacing={-1} mb={8}>
-                {orderPizza?.toppings?.map((topping) => (
-                  <Text
-                    key={topping}
-                    color={"blackAlpha.600"}
-                  >
-                    {topping}
-                  </Text>
-                ))}
-              </VStack>
-            </MotionBox>
-            <Form method="post">
-              <Center>
-                <MotionButton
-                  type="submit"
-                  variant={"ghost"}
-                  variants={buttonVariants}
-                  whileHover={"hover"}
-                >
-                  back
-                </MotionButton>
-              </Center>
-            </Form>
+      <Center minH={"100vh"}>
+        <MotionBox
+          variants={containerVariants}
+          initial={"hidden"}
+          animate={"visible"}
+        >
+          <Heading size={"md"} mb={6} textAlign={"center"}>
+            Thank you for your order
+          </Heading>
+          <MotionBox variants={childVariants}>
+            <Text mb={4} textAlign={"center"}>
+              You ordered a {orderPizza?.base} pizza whit:
+            </Text>
           </MotionBox>
-        </Center>
-      </Header>
+          <MotionBox variants={childVariants}>
+            <VStack spacing={-1} mb={8}>
+              {orderPizza?.toppings?.map((topping) => (
+                <Text
+                  key={topping}
+                  color={"blackAlpha.600"}
+                >
+                  {topping}
+                </Text>
+              ))}
+            </VStack>
+          </MotionBox>
+          <Form method="post">
+            <Center>
+              <MotionButton
+                type="submit"
+                variant={"ghost"}
+                variants={buttonVariants}
+                whileHover={"hover"}
+              >
+                back
+              </MotionButton>
+            </Center>
+          </Form>
+        </MotionBox>
+      </Center>
     </>
   );
 };

@@ -6,16 +6,23 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import { motion, Transition } from "framer-motion";
-import { ReactNode, VFC } from "react";
-import { Link } from "remix";
-
-type PROPS = {
-  children: ReactNode;
-};
+import { VFC } from "react";
+import { Link, Outlet } from "remix";
 
 const MotionBox = motion<BoxProps | Transition>(Box);
+export const buttonVariants = {
+  hover: {
+    scale: 1.1,
+    textShadow: "0px 0px 8px gray",
+    boxShadow: "0px 0px 8px gray",
+    transition: {
+      duration: 0.3,
+      yoyo: Infinity,
+    },
+  },
+};
 
-const Header: VFC<PROPS> = ({ children }) => {
+const FramerMotion: VFC = () => {
   return (
     <Box
       minH={"100vh"}
@@ -65,8 +72,8 @@ const Header: VFC<PROPS> = ({ children }) => {
           </Link>
         </MotionBox>
       </Flex>
-      <>{children}</>
+      <Outlet />
     </Box>
   );
 };
-export default Header;
+export default FramerMotion;

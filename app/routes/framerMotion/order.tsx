@@ -1,23 +1,21 @@
-import { buttonVariants } from ".";
+import { ContextType } from ".";
 import {
   Box,
   BoxProps,
-  Button,
-  ButtonProps,
   Center,
   Heading,
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { AnimatePresence, motion } from "framer-motion";
-import { VFC } from "react";
+import { motion } from "framer-motion";
+import { useEffect, VFC } from "react";
 import {
   ActionFunction,
   createCookie,
-  Form,
   LoaderFunction,
   redirect,
   useLoaderData,
+  useOutletContext,
 } from "remix";
 import {
   DeletePizzaDocument,
@@ -93,7 +91,6 @@ export const action: ActionFunction = async ({
 // ここから
 
 const MotionBox = motion<BoxProps>(Box);
-const MotionButton = motion<ButtonProps>(Button);
 
 const containerVariants = {
   hidden: {
@@ -136,56 +133,45 @@ const Order: VFC = () => {
   const { findPizzaByID: orderPizza } =
     useLoaderData() as FindPizzaByIdQuery;
   const { isPending } = usePageTransition("/framerMotion");
+  const { setShowModal } = useOutletContext<ContextType>();
+
+  useEffect(() => {
+    setTimeout(() => {
+      setShowModal(true);
+    }, 5000);
+  }, [setShowModal]);
 
   return (
     <Center minH={"100vh"}>
-      <AnimatePresence>
-        {isPending && (
-          <MotionBox
-            variants={containerVariants}
-            initial={"hidden"}
-            animate={"visible"}
-            exit={"exit"}
-          >
-            <Heading
-              size={"md"}
-              mb={6}
-              textAlign={"center"}
-            >
-              Thank you for your order
-            </Heading>
-            <MotionBox variants={childVariants}>
-              <Text mb={4} textAlign={"center"}>
-                You ordered a {orderPizza?.base} pizza whit:
-              </Text>
-            </MotionBox>
-            <MotionBox variants={childVariants}>
-              <VStack spacing={-1} mb={8}>
-                {orderPizza?.toppings?.map((topping) => (
-                  <Text
-                    key={topping}
-                    color={"blackAlpha.600"}
-                  >
-                    {topping}
-                  </Text>
-                ))}
-              </VStack>
-            </MotionBox>
-            <Form method="post">
-              <Center>
-                <MotionButton
-                  type="submit"
-                  variant={"ghost"}
-                  variants={buttonVariants}
-                  whileHover={"hover"}
-                >
-                  back
-                </MotionButton>
-              </Center>
-            </Form>
+      {isPending && (
+        <MotionBox
+          variants={containerVariants}
+          initial={"hidden"}
+          animate={"visible"}
+          exit={"exit"}
+        >
+          <Heading size={"md"} mb={6} textAlign={"center"}>
+            Thank you for your order
+          </Heading>
+          <MotionBox variants={childVariants}>
+            <Text mb={4} textAlign={"center"}>
+              You ordered a {orderPizza?.base} pizza whit:
+            </Text>
           </MotionBox>
-        )}
-      </AnimatePresence>
+          <MotionBox variants={childVariants}>
+            <VStack spacing={-1} mb={8}>
+              {orderPizza?.toppings?.map((topping) => (
+                <Text
+                  key={topping}
+                  color={"blackAlpha.600"}
+                >
+                  {topping}
+                </Text>
+              ))}
+            </VStack>
+          </MotionBox>
+        </MotionBox>
+      )}
     </Center>
   );
 };

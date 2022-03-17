@@ -8,11 +8,7 @@ import {
   Heading,
   VStack,
 } from "@chakra-ui/react";
-import {
-  AnimatePresence,
-  motion,
-  Transition,
-} from "framer-motion";
+import { motion, Transition } from "framer-motion";
 import { VFC } from "react";
 import { ActionFunction, Form, redirect } from "remix";
 import { CreatePizzaDocument } from "~/graphql/fauna/generated";
@@ -68,7 +64,7 @@ const containerVariants = {
   visible: {
     opacity: 1,
     x: 0,
-    transition: { delay: 1.5, duration: 1.5 },
+    transition: { duration: 1.5, delay: 1 },
   },
   exit: {
     x: "-100vw",
@@ -89,30 +85,29 @@ const Index: VFC = () => {
 
   return (
     <Center minH={"100vh"}>
-      <AnimatePresence>
-        {isPending && (
-          <MotionContainer
-            variants={containerVariants}
-            initial={"hidden"}
-            animate={"visible"}
-            exit={"exit"}
-          >
-            <VStack spacing={6}>
-              <Heading>Welcome to Pizza Joint</Heading>
-              <Form method="post">
-                <MotionButton
-                  type="submit"
-                  variants={buttonVariants}
-                  whileHover={"hover"}
-                  variant={"outline"}
-                >
-                  Create Your Pizza
-                </MotionButton>
-              </Form>
-            </VStack>
-          </MotionContainer>
-        )}
-      </AnimatePresence>
+      {isPending && (
+        <MotionContainer
+          variants={containerVariants}
+          initial={"hidden"}
+          animate={"visible"}
+          exit={"exit"}
+          size={"md"}
+        >
+          <VStack spacing={6}>
+            <Heading>Welcome to Pizza Joint</Heading>
+            <Form method="post">
+              <MotionButton
+                type="submit"
+                variants={buttonVariants}
+                whileHover={"hover"}
+                variant={"outline"}
+              >
+                Create Your Pizza
+              </MotionButton>
+            </Form>
+          </VStack>
+        </MotionContainer>
+      )}
     </Center>
   );
 };

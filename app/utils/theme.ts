@@ -1,22 +1,24 @@
 import { extendTheme } from "@chakra-ui/react";
 
+const Container = {
+  sizes: {
+    myCustomSize: {
+      maxW: "30ch",
+      // other properties
+    },
+  },
+
+  defaultProps: {
+    size: "myCustomSize",
+  },
+};
+
 const theme = extendTheme({
   styles: {
     global: {
       ".chakra-divider": {
         borderColor: "rgba(0, 0, 0, 0.3) !important",
       },
-      // ".chakra-checkbox": {
-      //   borderColor: "black",
-      //   _focus: {
-      //     boxShadow: "none",
-      //   },
-      //   _checked: {
-      //     _focus: {
-      //       boxShadow: "none",
-      //     },
-      //   },
-      // },
     },
   },
   components: {
@@ -49,6 +51,7 @@ const theme = extendTheme({
         },
       },
     },
+    Container,
   },
 });
 

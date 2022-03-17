@@ -1,4 +1,3 @@
-import { Modal } from "./framerMotion/Modal";
 import {
   Box,
   BoxProps,
@@ -7,27 +6,12 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import {
-  AnimatePresence,
   motion,
   Transition,
+  useAnimation,
 } from "framer-motion";
-import {
-  Dispatch,
-  SetStateAction,
-  useState,
-  VFC,
-} from "react";
+import { useEffect, VFC } from "react";
 import { Link, Outlet } from "remix";
-
-// ここまで
-//
-//
-//
-// ここから
-
-export type ContextType = {
-  setShowModal: Dispatch<SetStateAction<boolean>>;
-};
 
 // ここまで
 //
@@ -45,9 +29,20 @@ const headerVariants = {
       delay: 0.2,
       type: "spring",
       stiffness: 120,
+      when: "beforeChildren",
+      staggerChildren: 0.4,
     },
   },
 };
+const pageTransition = {
+  hidden: {
+    x: 0,
+  },
+  visible: {
+    x: 1,
+  },
+};
+
 export const buttonVariants = {
   hover: {
     scale: 1.1,
@@ -67,19 +62,15 @@ export const buttonVariants = {
 // ここから
 
 const FramerMotion: VFC = () => {
-  const [showModal, setShowModal] = useState(false);
-  const context: ContextType = {
-    setShowModal,
-  };
-
   return (
     <Box
       minH={"100vh"}
+      maxW={"100%"}
       bg={"rgb(139,218,236)"}
       bgGradient={
         "radial-gradient(circle, rgba(139,218,236,1) 0%, rgba(38,125,144,1) 100%)"
       }
-      overflowY={"hidden"}
+      overflow={"hidden"}
     >
       <MotionBox
         variants={headerVariants}
@@ -113,20 +104,18 @@ const FramerMotion: VFC = () => {
               d="M50 30 L50 -10 C50 -10 90 -10 90 30 Z"
             />
           </Icon>
-          <Link to={"/framerMotion"}>
+          <Link to={"/consolidate"}>
             <Heading>Pizza Joint</Heading>
           </Link>
         </Flex>
+        <MotionBox
+          initial={"hidden"}
+          animate={controls}
+          variants={pageTransition}
+        >
+          <Outlet />
+        </MotionBox>
       </MotionBox>
-      <Modal
-        showModal={showModal}
-        setShowModal={setShowModal}
-      />
-      <AnimatePresence
-        onExitComplete={() => setShowModal(false)}
-      >
-        <Outlet context={context} />
-      </AnimatePresence>
     </Box>
   );
 };

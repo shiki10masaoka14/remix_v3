@@ -20,7 +20,7 @@ const variants = {
 };
 
 const Consolidate: VFC = () => {
-  const outlet = useOutlet("test");
+  const outlet = useOutlet();
   const location = useLocation();
   const { showModal, setShowModal } =
     useContext(ModalContext);

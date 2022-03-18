@@ -6,24 +6,14 @@ import {
   Heading,
   Icon,
 } from "@chakra-ui/react";
-import { motion, Transition } from "framer-motion";
 import {
-  Dispatch,
-  SetStateAction,
-  useState,
-  VFC,
-} from "react";
-import { Link, Outlet } from "remix";
-
-// ここまで
-//
-//
-//
-// ここから
-
-export type ContextType = {
-  setShowModal: Dispatch<SetStateAction<boolean>>;
-};
+  AnimatePresence,
+  motion,
+  Transition,
+} from "framer-motion";
+import { useContext, VFC } from "react";
+import { Link, useLocation, useOutlet } from "remix";
+import { ModalContext } from "~/providers/ModalProvider";
 
 // ここまで
 //
@@ -44,6 +34,21 @@ const headerVariants = {
     },
   },
 };
+const containerVariants = {
+  hidden: {
+    opacity: 0,
+  },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 1.5, delay: 1 },
+  },
+  exit: {
+    x: "-100vw",
+    transition: { duration: 1 },
+  },
+};
+
 export const buttonVariants = {
   hover: {
     scale: 1.1,
@@ -63,10 +68,10 @@ export const buttonVariants = {
 // ここから
 
 const FramerMotion: VFC = () => {
-  const [showModal, setShowModal] = useState(false);
-  const context: ContextType = {
-    setShowModal,
-  };
+  const outlet = useOutlet();
+  const location = useLocation();
+  const { showModal, setShowModal } =
+    useContext(ModalContext);
 
   return (
     <Box
@@ -114,11 +119,24 @@ const FramerMotion: VFC = () => {
           </Link>
         </Flex>
       </MotionBox>
+      <AnimatePresence
+        exitBeforeEnter
+        onExitComplete={() => setShowModal(false)}
+      >
+        <MotionBox
+          key={location.key}
+          variants={containerVariants}
+          initial={"hidden"}
+          animate={"visible"}
+          exit={"exit"}
+        >
+          {outlet}
+        </MotionBox>
+      </AnimatePresence>
       <Modal
         showModal={showModal}
         setShowModal={setShowModal}
-      />
-      <Outlet context={context} />
+      />{" "}
     </Box>
   );
 };

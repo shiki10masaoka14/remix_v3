@@ -1,5 +1,4 @@
 import { buttonVariants } from ".";
-import { containerVariants } from "./base";
 import {
   Box,
   BoxProps,
@@ -14,7 +13,6 @@ import { VFC } from "react";
 import { ActionFunction, Form, redirect } from "remix";
 import { PartialUpdatePizzaDocument } from "~/graphql/fauna/generated";
 import { faunaResolver } from "~/graphql/fauna/resolver";
-import { usePageTransition } from "~/hooks/usePageTransition";
 import { userPrefs } from "~/utils/cookies";
 
 // ここまで
@@ -67,9 +65,6 @@ const Toppings: VFC = () => {
     "extra cheese",
     "tomatoes",
   ];
-  const { isPending } = usePageTransition(
-    "/framerMotion/order",
-  );
 
   // ここまで
   //
@@ -79,48 +74,39 @@ const Toppings: VFC = () => {
 
   return (
     <Center minH={"100vh"}>
-      {isPending && (
-        <MotionBox
-          variants={containerVariants}
-          initial={"hidden"}
-          animate={"visible"}
-          exit={"exit"}
-        >
-          <Form method="post">
-            <VStack align={"start"} mb={6}>
-              {toppings.map((topping) => (
-                <MotionBox
-                  key={topping}
-                  transition={{
-                    type: "spring",
-                    stiffness: 300,
-                  }}
-                  whileHover={{
-                    scale: 1.3,
-                    originX: 0,
-                  }}
-                >
-                  <Checkbox
-                    name={topping}
-                    value={topping}
-                    _hover={{ color: "red.300" }}
-                  >
-                    {topping}
-                  </Checkbox>
-                </MotionBox>
-              ))}
-            </VStack>
-            <MotionButton
-              variant={"outline"}
-              variants={buttonVariants}
-              type="submit"
-              whileHover={"hover"}
+      <Form method="post">
+        <VStack align={"start"} mb={6}>
+          {toppings.map((topping) => (
+            <MotionBox
+              key={topping}
+              transition={{
+                type: "spring",
+                stiffness: 300,
+              }}
+              whileHover={{
+                scale: 1.3,
+                originX: 0,
+              }}
             >
-              send
-            </MotionButton>
-          </Form>
-        </MotionBox>
-      )}
+              <Checkbox
+                name={topping}
+                value={topping}
+                _hover={{ color: "red.300" }}
+              >
+                {topping}
+              </Checkbox>
+            </MotionBox>
+          ))}
+        </VStack>
+        <MotionButton
+          variant={"outline"}
+          variants={buttonVariants}
+          type="submit"
+          whileHover={"hover"}
+        >
+          send
+        </MotionButton>
+      </Form>
     </Center>
   );
 };

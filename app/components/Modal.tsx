@@ -61,6 +61,10 @@ const modal = {
 
 export const Modal: VFC<PROPS> = memo(
   ({ showModal, setShowModal }) => {
+    const onClickModal = () => {
+      setShowModal(false);
+    };
+
     return (
       <>
         <AnimatePresence exitBeforeEnter>
@@ -90,12 +94,12 @@ export const Modal: VFC<PROPS> = memo(
                     Want to make another pizza?
                   </Text>
                   <Form
-                  // method="post"
-                  // action="/framerMotion/order"
+                    method="post"
+                    action="/framerMotion/order"
                   >
                     <MotionButton
-                      // type="submit"
-                      onClick={() => setShowModal(false)}
+                      type="submit"
+                      onClick={onClickModal}
                       variants={buttonVariants}
                       whileHover={"hover"}
                       variant={"ghost"}

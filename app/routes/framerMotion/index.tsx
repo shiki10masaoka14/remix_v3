@@ -3,24 +3,12 @@ import {
   Button,
   ButtonProps,
   Center,
-  Container,
-  ContainerProps,
   Heading,
   VStack,
 } from "@chakra-ui/react";
-import {
-  AnimatePresence,
-  motion,
-  Transition,
-} from "framer-motion";
+import { motion } from "framer-motion";
 import { VFC } from "react";
-import {
-  ActionFunction,
-  Form,
-  redirect,
-  useResolvedPath,
-  useTransition,
-} from "remix";
+import { ActionFunction, Form, redirect } from "remix";
 import { CreatePizzaDocument } from "~/graphql/fauna/generated";
 import { faunaResolver } from "~/graphql/fauna/resolver";
 import { userPrefs } from "~/utils/cookies";
@@ -61,23 +49,6 @@ export const action: ActionFunction = async ({
 // ここから
 
 const MotionButton = motion<ButtonProps>(Button);
-const MotionContainer = motion<ContainerProps | Transition>(
-  Container,
-);
-const containerVariants = {
-  hidden: {
-    opacity: 0,
-  },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: { duration: 1.5, delay: 1 },
-  },
-  exit: {
-    x: "-100vw",
-    transition: { duration: 1 },
-  },
-};
 
 // ここまで
 //
@@ -86,43 +57,22 @@ const containerVariants = {
 // ここから
 
 const Index: VFC = () => {
-  // const { isPending } = usePageTransition(
-  //   "/framerMotion/base",
-  // );
-  const path = useResolvedPath("/framerMotion/base");
-  const transition = useTransition();
-  const isPending =
-    transition.location?.pathname === path.pathname;
-  console.log(isPending);
-
   return (
-    <AnimatePresence exitBeforeEnter>
-      {!isPending ? (
-        <MotionContainer
-          variants={containerVariants}
-          initial={"hidden"}
-          animate={"visible"}
-          exit={"exit"}
-          size={"md"}
-        >
-          <Center minH={"100vh"}>
-            <VStack spacing={6}>
-              <Heading>Welcome to Pizza Joint</Heading>
-              <Form method="post">
-                <MotionButton
-                  type="submit"
-                  variants={buttonVariants}
-                  whileHover={"hover"}
-                  variant={"outline"}
-                >
-                  Create Your Pizza
-                </MotionButton>
-              </Form>
-            </VStack>
-          </Center>
-        </MotionContainer>
-      ) : null}
-    </AnimatePresence>
+    <Center minH={"100vh"}>
+      <VStack spacing={6}>
+        <Heading>Welcome to Pizza Joint</Heading>
+        <Form method="post">
+          <MotionButton
+            type="submit"
+            variants={buttonVariants}
+            whileHover={"hover"}
+            variant={"outline"}
+          >
+            Create Your Pizza
+          </MotionButton>
+        </Form>
+      </VStack>
+    </Center>
   );
 };
 export default Index;

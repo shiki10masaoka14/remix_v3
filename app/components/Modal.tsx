@@ -1,4 +1,4 @@
-import { buttonVariants } from "../framerMotion";
+import { buttonVariants } from "../routes/framerMotion";
 import {
   Box,
   BoxProps,
@@ -40,6 +40,7 @@ const backdrop = {
     opacity: 1,
     transition: { when: "beforeChildren" },
   },
+  exit: { opacity: 0 },
 };
 const modal = {
   hidden: {
@@ -62,15 +63,13 @@ export const Modal: VFC<PROPS> = memo(
   ({ showModal, setShowModal }) => {
     return (
       <>
-        <AnimatePresence
-          exitBeforeEnter
-          // onExitComplete={() => setShowModal(false)}
-        >
+        <AnimatePresence exitBeforeEnter>
           {showModal && (
             <MotionBox
               variants={backdrop}
-              animate={"visible"}
               initial={"hidden"}
+              animate={"visible"}
+              exit={"exit"}
               position={"fixed"}
               top={0}
               left={0}
@@ -91,12 +90,12 @@ export const Modal: VFC<PROPS> = memo(
                     Want to make another pizza?
                   </Text>
                   <Form
-                    method="post"
-                    action="/framerMotion/order"
+                  // method="post"
+                  // action="/framerMotion/order"
                   >
                     <MotionButton
-                      type="submit"
-                      // onClick={() => setShowModal(false)}
+                      // type="submit"
+                      onClick={() => setShowModal(false)}
                       variants={buttonVariants}
                       whileHover={"hover"}
                       variant={"ghost"}

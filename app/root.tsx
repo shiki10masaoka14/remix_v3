@@ -1,3 +1,4 @@
+import { ModalProvider } from "./providers/ModalProvider";
 import theme from "./utils/theme";
 import {
   ChakraProvider,
@@ -49,9 +50,11 @@ function Document({
 export default function App() {
   return (
     <Document>
-      <ChakraProvider theme={theme}>
-        <Outlet />
-      </ChakraProvider>
+      <ModalProvider>
+        <ChakraProvider theme={theme}>
+          <Outlet />
+        </ChakraProvider>
+      </ModalProvider>
     </Document>
   );
 }

@@ -1,11 +1,19 @@
-import { Center, Text } from "@chakra-ui/react";
-import { VFC } from "react";
+import { Box, Button, Heading } from "@chakra-ui/react";
+import { useContext, VFC } from "react";
+import { ModalContext } from "~/providers/ModalProvider";
 
-const Test: VFC = () => {
+const Home: VFC = () => {
+  const { setShowModal } = useContext(ModalContext);
+
   return (
-    <Center minH={"100vh"}>
-      <Text fontSize={40}>test</Text>
-    </Center>
+    <>
+      <Box>
+        <Heading> ホーム</Heading>
+        <Button onClick={() => setShowModal(true)}>
+          モーダル
+        </Button>
+      </Box>
+    </>
   );
 };
-export default Test;
+export default Home;

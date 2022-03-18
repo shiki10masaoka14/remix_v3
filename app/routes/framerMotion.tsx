@@ -1,4 +1,4 @@
-import { Modal } from "./framerMotion/Modal";
+import { Modal } from "../components/Modal";
 import {
   Box,
   BoxProps,
@@ -6,11 +6,7 @@ import {
   Heading,
   Icon,
 } from "@chakra-ui/react";
-import {
-  AnimatePresence,
-  motion,
-  Transition,
-} from "framer-motion";
+import { motion, Transition } from "framer-motion";
 import {
   Dispatch,
   SetStateAction,
@@ -122,11 +118,7 @@ const FramerMotion: VFC = () => {
         showModal={showModal}
         setShowModal={setShowModal}
       />
-      <AnimatePresence
-        onExitComplete={() => setShowModal(false)}
-      >
-        <Outlet context={context} />
-      </AnimatePresence>
+      <Outlet context={context} />
     </Box>
   );
 };

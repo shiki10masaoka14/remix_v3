@@ -1,0 +1,8 @@
+schema: "${GRAPHCMS_ENDPOINT}"
+documents: app/graphql/graphCMS/graphCMS.gql
+generates:
+  app/graphql/graphCMS/generated.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-graphql-request

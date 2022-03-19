@@ -1,141 +1,83 @@
 import {
   Box,
-  BoxProps,
   Button,
   Center,
-  Container,
-  FormControl,
   Heading,
   HStack,
   Input,
-  Text,
+  useBoolean,
+  VStack,
 } from "@chakra-ui/react";
-import {
-  AnimatePresence,
-  motion,
-  Transition,
-} from "framer-motion";
 import { useEffect, useRef, useState, VFC } from "react";
-import { ActionFunction, Form, useActionData } from "remix";
+import { Form, LoaderFunction, useLoaderData } from "remix";
+import {
+  SlideDocument,
+  SlideQuery,
+} from "~/graphql/graphCMS/generated";
+import { graphCMSResolver } from "~/graphql/graphCMS/resolver";
 
-// ここまで
-//
-//
-//
-// ここから
-
-export const action: ActionFunction = async ({
-  request,
-}) => {
-  const formData = await request.formData();
-  const value = Object.fromEntries(formData);
-  const { email } = value;
-
-  const res = await fetch(
-    `${CONVERTKIT_ENDPOINT}/forms/${CONVERTKIT_FORM_ID}/subscribe`,
-    {
-      method: "post",
-      body: JSON.stringify({
-        email,
-        api_key: CONVERTKIT_API,
-      }),
-      headers: {
-        "Content-Type": "application/json; charset=UTF-8",
-      },
-    },
+export const loader: LoaderFunction = async () => {
+  const { data } = await graphCMSResolver(
+    SlideDocument.loc?.source.body,
   );
+  const { slide } = data;
 
-  return res.json();
+  return { slide };
 };
 
-// ここまで
-//
-//
-//
-// ここから
-
-const MotionBox = motion<BoxProps | Transition>(Box);
-
 const Newsletter: VFC = () => {
-  const actionData = useActionData();
-  const state: "idle" | "success" | "error" =
-    actionData?.subscription
-      ? "success"
-      : actionData?.error
-      ? "error"
-      : "idle";
-
-  const [height, setHeight] = useState(0);
-  const ref = useRef<HTMLDivElement>(null);
+  const { slide } = useLoaderData<SlideQuery>();
+  const element = useRef<HTMLDivElement>(null);
+  const [length, setLength] = useState<{
+    height: number | undefined;
+    width: number | undefined;
+  }>();
+  const [flag, setFlag] = useBoolean(true);
 
   useEffect(() => {
-    setHeight(Number(ref.current?.clientHeight));
-  }, [ref]);
+    setLength({
+      height:
+        element.current?.getBoundingClientRect().height,
+      width: element.current?.getBoundingClientRect().width,
+    });
+  }, []);
 
   return (
-    <Box bg={"tomato"} minH={"100vh"}>
-      <Center minH={"100vh"}>
-        <Container
-          bg={"white"}
-          pt={4}
-          pb={6}
-          px={6}
-          borderRadius={6}
-          ref={ref}
-          h={height}
-          position={"relative"}
-          w={"100%"}
+    <Center
+      minH={"100vh"}
+      bg={`url(${slide?.slide[0].url})`}
+      bgSize={"cover"}
+    >
+      <Box>
+        <Box
+          bg={"whiteAlpha.700"}
+          p={6}
+          borderRadius={10}
+          ref={element}
+          h={length?.height}
+          w={length?.width}
         >
-          <AnimatePresence initial={false}>
-            {state !== "success" && (
-              <MotionBox
-                key={"form"}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 2 }}
-                position={"absolute"}
-              >
-                <Form method="post">
-                  <Heading>Subscribe!</Heading>
-                  <Text mb={4}>
-                    Don't miss any of the action
-                  </Text>
-                  <FormControl as={"fieldset"} w={"100%"}>
-                    <HStack>
-                      <Input
-                        type={"email"}
-                        placeholder={"you@example.com"}
-                        name={"email"}
-                      />
-                      <Button type={"submit"}>
-                        Subscribe
-                      </Button>
-                    </HStack>
-                  </FormControl>
-                </Form>
-              </MotionBox>
-            )}
-            {state === "success" && (
-              <MotionBox
-                key={"text"}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 2 }}
-                position={"absolute"}
-              >
-                <Heading>You're subscribed</Heading>
-                <Text>
-                  Please check your email to confirm your
-                  subscription.
-                </Text>
-              </MotionBox>
-            )}
-          </AnimatePresence>
-        </Container>
-      </Center>
-    </Box>
+          {flag ? (
+            <VStack>
+              <Form method="post">
+                <Heading size={"md"}>
+                  ニュースレター
+                </Heading>
+                <HStack>
+                  <Input type={"email"} name={"email"} />
+                  <Button type="submit">更新</Button>
+                </HStack>
+              </Form>
+            </VStack>
+          ) : (
+            <Center w={"100%"} h={"100%"}>
+              <Heading>成功しました</Heading>
+            </Center>
+          )}
+        </Box>
+        <Button onClick={setFlag.toggle}>切り替え</Button>
+      </Box>
+    </Center>
   );
 };
 export default Newsletter;

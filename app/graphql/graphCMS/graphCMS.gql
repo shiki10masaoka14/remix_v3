@@ -1,0 +1,9 @@
+query Slide {
+  slide(where: { id: "cl0f09v9f2avl0b13idvxmx4b" }) {
+    id
+    slide(where: { id: "cl0f092z62atz0b13j9m5etvh" }) {
+      id
+      url
+    }
+  }
+}

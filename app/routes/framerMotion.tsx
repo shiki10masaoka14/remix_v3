@@ -12,8 +12,48 @@ import {
   Transition,
 } from "framer-motion";
 import { useContext, VFC } from "react";
-import { Link, useLocation, useOutlet } from "remix";
+import {
+  ActionFunction,
+  createCookie,
+  Link,
+  redirect,
+  useLocation,
+  useOutlet,
+} from "remix";
+import { DeletePizzaDocument } from "~/graphql/fauna/generated";
+import { faunaResolver } from "~/graphql/fauna/resolver";
 import { ModalContext } from "~/providers/ModalProvider";
+
+// ここまで
+//
+//
+//
+// ここから
+
+export const action: ActionFunction = async ({
+  request,
+}) => {
+  const userPrefs = createCookie("user-prefs", {
+    maxAge: 0,
+  });
+
+  const cookieHeader = request.headers.get("Cookie");
+  const cookie =
+    (await userPrefs.parse(cookieHeader)) || {};
+
+  await faunaResolver(
+    DeletePizzaDocument.loc?.source.body,
+    {
+      id: cookie.pizzaId,
+    },
+  );
+
+  return redirect("/framerMotion", {
+    headers: {
+      "Set-Cookie": await userPrefs.serialize(cookie),
+    },
+  });
+};
 
 // ここまで
 //
@@ -34,17 +74,42 @@ const headerVariants = {
     },
   },
 };
-const containerVariants = {
+const indexVariants = {
   hidden: {
     opacity: 0,
   },
   visible: {
     opacity: 1,
-    x: 0,
     transition: { duration: 1.5, delay: 1 },
   },
   exit: {
     x: "-100vw",
+    transition: { duration: 1 },
+  },
+};
+const containerVariants = {
+  hidden: {
+    x: "100vw",
+  },
+  visible: {
+    x: 0,
+    transition: { duration: 1 },
+  },
+  exit: {
+    x: "-100vw",
+    transition: { duration: 1 },
+  },
+};
+const orderVariants = {
+  hidden: {
+    x: "100vw",
+  },
+  visible: {
+    x: 0,
+    transition: { duration: 1 },
+  },
+  exit: {
+    opacity: 0,
     transition: { duration: 1 },
   },
 };
@@ -72,6 +137,8 @@ const FramerMotion: VFC = () => {
   const location = useLocation();
   const { showModal, setShowModal } =
     useContext(ModalContext);
+
+  console.log(location.pathname);
 
   return (
     <Box
@@ -125,7 +192,13 @@ const FramerMotion: VFC = () => {
       >
         <MotionBox
           key={location.key}
-          variants={containerVariants}
+          variants={
+            location.pathname === "/framerMotion"
+              ? indexVariants
+              : location.pathname === "/framerMotion/order"
+              ? orderVariants
+              : containerVariants
+          }
           initial={"hidden"}
           animate={"visible"}
           exit={"exit"}

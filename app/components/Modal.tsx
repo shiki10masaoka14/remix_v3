@@ -95,7 +95,7 @@ export const Modal: VFC<PROPS> = memo(
                   </Text>
                   <Form
                     method="post"
-                    action="/framerMotion/order"
+                    action="/framerMotion"
                   >
                     <MotionButton
                       type="submit"

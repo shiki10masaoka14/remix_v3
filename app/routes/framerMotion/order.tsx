@@ -7,16 +7,14 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import { useContext, useEffect, VFC } from "react";
 import {
-  ActionFunction,
-  createCookie,
-  LoaderFunction,
-  redirect,
-  useLoaderData,
-} from "remix";
+  useContext,
+  useEffect,
+  useState,
+  VFC,
+} from "react";
+import { LoaderFunction, useLoaderData } from "remix";
 import {
-  DeletePizzaDocument,
   FindPizzaByIdDocument,
   FindPizzaByIdQuery,
 } from "~/graphql/fauna/generated";
@@ -37,6 +35,10 @@ export const loader: LoaderFunction = async ({
   const cookie =
     (await userPrefs.parse(cookieHeader)) || {};
 
+  if (!cookie) {
+    return null;
+  }
+
   const { data } = await faunaResolver(
     FindPizzaByIdDocument.loc?.source.body,
     { id: cookie.pizzaId },
@@ -52,44 +54,14 @@ export const loader: LoaderFunction = async ({
 //
 // ここから
 
-export const action: ActionFunction = async ({
-  request,
-}) => {
-  const userPrefs = createCookie("user-prefs", {
-    maxAge: 0,
-  });
-
-  const cookieHeader = request.headers.get("Cookie");
-  const cookie =
-    (await userPrefs.parse(cookieHeader)) || {};
-
-  await faunaResolver(
-    DeletePizzaDocument.loc?.source.body,
-    {
-      id: cookie.pizzaId,
-    },
-  );
-
-  return redirect("/framerMotion", {
-    headers: {
-      "Set-Cookie": await userPrefs.serialize(cookie),
-    },
-  });
-};
-// ここまで
-//
-//
-//
-// ここから
-
 const MotionBox = motion<BoxProps>(Box);
 
 const childVariants = {
   hidden: {
-    opacity: 0,
+    y: "-100vh",
   },
   visible: {
-    opacity: 1,
+    y: 0,
     transition: {
       delay: 1,
     },
@@ -114,10 +86,17 @@ const childVariants2 = {
 // ここから
 
 const Order: VFC = () => {
-  const orderPizza = useLoaderData() as FindPizzaByIdQuery;
-  const { setShowModal } = useContext(ModalContext);
-  console.log(orderPizza?.findPizzaByID?._id);
+  const orderPizzaData = useLoaderData();
 
+  // Faunaのデータを削除後もFade outアニメーションを付けるためにDOMにはデータを残したい
+  const [orderPizza, setOrderPizza] =
+    useState<FindPizzaByIdQuery>();
+  useEffect(() => {
+    orderPizzaData && setOrderPizza(orderPizzaData);
+  }, [orderPizzaData]);
+
+  // 5秒後にモーダル表示
+  const { setShowModal } = useContext(ModalContext);
   useEffect(() => {
     setTimeout(() => {
       setShowModal(true);

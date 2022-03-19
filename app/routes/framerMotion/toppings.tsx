@@ -73,7 +73,7 @@ const Toppings: VFC = () => {
   // ここから
 
   return (
-    <Center minH={"100vh"}>
+    <Center>
       <Form method="post">
         <VStack align={"start"} mb={6}>
           {toppings.map((topping) => (

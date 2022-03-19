@@ -58,13 +58,11 @@ const MotionBox = motion<BoxProps>(Box);
 
 const childVariants = {
   hidden: {
-    y: "-100vh",
+    opacity: 0,
   },
   visible: {
-    y: 0,
-    transition: {
-      delay: 1,
-    },
+    opacity: 1,
+    transition: { duration: 1 },
   },
 };
 const childVariants2 = {
@@ -73,9 +71,7 @@ const childVariants2 = {
   },
   visible: {
     opacity: 1,
-    transition: {
-      delay: 2,
-    },
+    transition: { duration: 2 },
   },
 };
 
@@ -104,7 +100,7 @@ const Order: VFC = () => {
   }, [setShowModal]);
 
   return (
-    <Center minH={"100vh"}>
+    <Center>
       <VStack>
         <Heading size={"md"} mb={6} textAlign={"center"}>
           Thank you for your order
@@ -114,20 +110,20 @@ const Order: VFC = () => {
             You ordered a {orderPizza?.findPizzaByID?.base}{" "}
             pizza whit:
           </Text>
-        </MotionBox>
-        <MotionBox variants={childVariants2}>
-          <VStack spacing={-1} mb={8}>
-            {orderPizza?.findPizzaByID?.toppings?.map(
-              (topping) => (
-                <Text
-                  key={topping}
-                  color={"blackAlpha.600"}
-                >
-                  {topping}
-                </Text>
-              ),
-            )}
-          </VStack>
+          <MotionBox variants={childVariants2}>
+            <VStack spacing={-1} mb={8}>
+              {orderPizza?.findPizzaByID?.toppings?.map(
+                (topping) => (
+                  <Text
+                    key={topping}
+                    color={"blackAlpha.600"}
+                  >
+                    {topping}
+                  </Text>
+                ),
+              )}
+            </VStack>
+          </MotionBox>
         </MotionBox>
       </VStack>
     </Center>

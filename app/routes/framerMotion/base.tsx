@@ -4,7 +4,6 @@ import {
   Button,
   ButtonProps,
   Center,
-  Container,
   Divider,
   Heading,
   HStack,
@@ -98,8 +97,8 @@ const Base: VFC = () => {
   const [baseVal, setBaseVal] = useState<String>();
 
   return (
-    <Center minH={"100vh"}>
-      <Container>
+    <Center>
+      <VStack spacing={6}>
         <Heading size={"md"} mb={2}>
           Step 1: Choose Your Base
         </Heading>
@@ -156,7 +155,7 @@ const Base: VFC = () => {
             </MotionBox>
           </Form>
         )}
-      </Container>
+      </VStack>
     </Center>
   );
 };

@@ -9,6 +9,7 @@ import {
 import { motion } from "framer-motion";
 import { VFC } from "react";
 import { ActionFunction, Form, redirect } from "remix";
+import { Loader } from "~/components/Loader";
 import { CreatePizzaDocument } from "~/graphql/fauna/generated";
 import { faunaResolver } from "~/graphql/fauna/resolver";
 import { userPrefs } from "~/utils/cookies";
@@ -58,7 +59,7 @@ const MotionButton = motion<ButtonProps>(Button);
 
 const Index: VFC = () => {
   return (
-    <Center minH={"100vh"}>
+    <Center>
       <VStack spacing={6}>
         <Heading>Welcome to Pizza Joint</Heading>
         <Form method="post">
@@ -67,10 +68,12 @@ const Index: VFC = () => {
             variants={buttonVariants}
             whileHover={"hover"}
             variant={"outline"}
+            mb={6}
           >
             Create Your Pizza
           </MotionButton>
         </Form>
+        <Loader />
       </VStack>
     </Center>
   );

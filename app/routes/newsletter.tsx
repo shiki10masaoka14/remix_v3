@@ -18,6 +18,7 @@ import {
   LoaderFunction,
   useActionData,
   useLoaderData,
+  useTransition,
 } from "remix";
 import {
   SlideDocument,
@@ -98,30 +99,26 @@ const switchVariants = {
 const Newsletter: VFC = () => {
   const { slide } = useLoaderData<SlideQuery>();
   const element = useRef<HTMLInputElement>(null);
-  // const [length, setLength] = useState<{
-  //   height: number | undefined;
-  //   width: number | undefined;
-  // }>();
-  // const [flag, setFlag] = useBoolean(true);
+  const formRef = useRef<HTMLFormElement>(null);
   const actionData = useActionData();
-  const state: "idle" | "success" | "error" =
-    actionData?.subscription
+  const transition = useTransition();
+  const state: "idle" | "success" | "error" | "submitting" =
+    transition.submission
+      ? "submitting"
+      : actionData?.subscription
       ? "success"
       : actionData?.error
       ? "error"
       : "idle";
 
-  // useEffect(() => {
-  //   setLength({
-  //     height:
-  //       element.current?.getBoundingClientRect().height,
-  //     width: element.current?.getBoundingClientRect().width,
-  //   });
-  // }, []);
-
   useEffect(() => {
     element.current?.focus();
   }, []);
+
+  const onClickBack = () => {
+    formRef.current?.reset();
+    element.current?.focus();
+  };
 
   // ここまで
   //
@@ -145,10 +142,17 @@ const Newsletter: VFC = () => {
           <MotionBox
             variants={switchVariants}
             animate={
-              state === "idle" ? "visible" : "hidden"
+              state === "idle" || state === "submitting"
+                ? "visible"
+                : "hidden"
+            }
+            zIndex={
+              state === "idle" || state === "submitting"
+                ? "base"
+                : "hide"
             }
           >
-            <Form method="post">
+            <Form method="post" ref={formRef}>
               <VStack align={"center"}>
                 <Heading size={"md"}>
                   ニュースレター
@@ -159,7 +163,14 @@ const Newsletter: VFC = () => {
                     name={"email"}
                     ref={element}
                   />
-                  <Button type="submit">更新</Button>
+                  <Button
+                    type="submit"
+                    isLoading={state === "submitting"}
+                    loadingText="更新中"
+                    w={"120px"}
+                  >
+                    更新
+                  </Button>
                 </HStack>
               </VStack>
             </Form>
@@ -175,6 +186,7 @@ const Newsletter: VFC = () => {
             bottom={0}
             left={0}
             right={0}
+            zIndex={state === "success" ? "base" : "hide"}
           >
             <Center h={"100%"}>
               <VStack>
@@ -194,6 +206,7 @@ const Newsletter: VFC = () => {
             bottom={0}
             left={0}
             right={0}
+            zIndex={state === "success" ? "hide" : ""}
           >
             <Center h={"100%"}>
               <VStack>
@@ -203,12 +216,16 @@ const Newsletter: VFC = () => {
                   </Heading>
                   <Text>{actionData?.message}</Text>
                 </Box>
-                <Link to={"/newsletter"}>やり直す</Link>
+                <Link
+                  to={"/newsletter"}
+                  onClick={onClickBack}
+                >
+                  やり直す
+                </Link>
               </VStack>
             </Center>
           </MotionBox>
         </Box>
-        {/* <Button onClick={setFlag.toggle}>切り替え</Button> */}
       </Box>
     </Center>
   );

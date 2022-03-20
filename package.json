@@ -53,8 +53,8 @@
     "dev:miniflare": "cross-env NODE_ENV=development miniflare ./build/index.js --watch",
     "start": "cross-env NODE_ENV=production miniflare ./build/index.js",
     "deploy": "npm run build && wrangler publish",
-    "generate-fauna": "graphql-codegen --require dotenv/config --config app/graphql/fauna/codegen.yml",
-    "generate-graphCMS": "graphql-codegen --require dotenv/config --config app/graphql/graphCMS/codegen.yml"
+    "fauna-gen": "graphql-codegen --require dotenv/config --config app/graphql/fauna/codegen.yml",
+    "graphCMS-gen": "graphql-codegen --require dotenv/config --config app/graphql/graphCMS/codegen.yml"
   },
   "main": "build/index.js"
 }

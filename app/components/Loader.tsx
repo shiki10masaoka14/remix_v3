@@ -30,7 +30,7 @@ const loaderVariants = {
     y: [0, -40],
     x: 0,
     transition: {
-      yoyo: Infinity,
+      repeat: Infinity,
       duration: 0.25,
       ease: "easeOut",
     },

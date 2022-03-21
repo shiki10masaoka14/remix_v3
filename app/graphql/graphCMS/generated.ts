@@ -4621,6 +4621,11 @@ export type SlideQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type SlideQuery = { __typename?: 'Query', slide?: { __typename?: 'Slide', id: string, slide: Array<{ __typename?: 'Asset', id: string, url: string }> } | null };
 
+export type SlidesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SlidesQuery = { __typename?: 'Query', slides: Array<{ __typename?: 'Slide', id: string, slide: Array<{ __typename?: 'Asset', id: string, url: string }> }> };
+
 
 export const SlideDocument = gql`
     query Slide {
@@ -4629,6 +4634,17 @@ export const SlideDocument = gql`
     slide(where: {id: "cl0f092z62atz0b13j9m5etvh"}) {
       id
       url
+    }
+  }
+}
+    `;
+export const SlidesDocument = gql`
+    query Slides {
+  slides {
+    id
+    slide {
+      id
+      url(transformation: {image: {resize: {fit: clip, height: 900, width: 1600}}})
     }
   }
 }
@@ -4643,6 +4659,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   return {
     Slide(variables?: SlideQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SlideQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<SlideQuery>(SlideDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Slide');
+    },
+    Slides(variables?: SlidesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SlidesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<SlidesQuery>(SlidesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Slides');
     }
   };
 }

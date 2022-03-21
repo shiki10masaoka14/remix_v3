@@ -10,6 +10,7 @@ const Index: VFC = () => {
       <Link to={"/newsletter"}>newsletter</Link>
       <Link to={"/framerMotion"}>framer motion</Link>
       <Link to={"/consolidate"}>一元管理</Link>
+      <Link to={"/slider"}>スライダー</Link>
     </VStack>
   );
 };

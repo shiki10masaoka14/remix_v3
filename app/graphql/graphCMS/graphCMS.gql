@@ -7,3 +7,19 @@ query Slide {
     }
   }
 }
+
+query Slides {
+  slides {
+    id
+    slide {
+      id
+      url(
+        transformation: {
+          image: {
+            resize: { fit: clip, height: 900, width: 1600 }
+          }
+        }
+      )
+    }
+  }
+}

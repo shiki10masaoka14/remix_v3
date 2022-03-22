@@ -73,6 +73,7 @@ export type Asset = Node & {
   slideAsset: Array<Asset>;
   slide: Array<Asset>;
   slideSlide: Array<Slide>;
+  portfolioPortfolio: Array<Portfolio>;
   scheduledIn: Array<ScheduledOperation>;
   /** List of Asset versions */
   history: Array<Version>;
@@ -172,6 +173,19 @@ export type AssetSlideSlideArgs = {
 
 
 /** Asset system model */
+export type AssetPortfolioPortfolioArgs = {
+  where?: InputMaybe<PortfolioWhereInput>;
+  orderBy?: InputMaybe<PortfolioOrderByInput>;
+  skip?: InputMaybe<Scalars['Int']>;
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  locales?: InputMaybe<Array<Locale>>;
+};
+
+
+/** Asset system model */
 export type AssetScheduledInArgs = {
   where?: InputMaybe<ScheduledOperationWhereInput>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -225,6 +239,7 @@ export type AssetCreateInput = {
   slideAsset?: InputMaybe<AssetCreateManyInlineInput>;
   slide?: InputMaybe<AssetCreateManyInlineInput>;
   slideSlide?: InputMaybe<SlideCreateManyInlineInput>;
+  portfolioPortfolio?: InputMaybe<PortfolioCreateManyInlineInput>;
   /** Inline mutations for managing document localizations excluding the default locale */
   localizations?: InputMaybe<AssetCreateLocalizationsInput>;
 };
@@ -360,6 +375,9 @@ export type AssetManyWhereInput = {
   slideSlide_every?: InputMaybe<SlideWhereInput>;
   slideSlide_some?: InputMaybe<SlideWhereInput>;
   slideSlide_none?: InputMaybe<SlideWhereInput>;
+  portfolioPortfolio_every?: InputMaybe<PortfolioWhereInput>;
+  portfolioPortfolio_some?: InputMaybe<PortfolioWhereInput>;
+  portfolioPortfolio_none?: InputMaybe<PortfolioWhereInput>;
   scheduledIn_every?: InputMaybe<ScheduledOperationWhereInput>;
   scheduledIn_some?: InputMaybe<ScheduledOperationWhereInput>;
   scheduledIn_none?: InputMaybe<ScheduledOperationWhereInput>;
@@ -406,6 +424,7 @@ export type AssetUpdateInput = {
   slideAsset?: InputMaybe<AssetUpdateManyInlineInput>;
   slide?: InputMaybe<AssetUpdateManyInlineInput>;
   slideSlide?: InputMaybe<SlideUpdateManyInlineInput>;
+  portfolioPortfolio?: InputMaybe<PortfolioUpdateManyInlineInput>;
   /** Manage document localizations */
   localizations?: InputMaybe<AssetUpdateLocalizationsInput>;
 };
@@ -716,6 +735,9 @@ export type AssetWhereInput = {
   slideSlide_every?: InputMaybe<SlideWhereInput>;
   slideSlide_some?: InputMaybe<SlideWhereInput>;
   slideSlide_none?: InputMaybe<SlideWhereInput>;
+  portfolioPortfolio_every?: InputMaybe<PortfolioWhereInput>;
+  portfolioPortfolio_some?: InputMaybe<PortfolioWhereInput>;
+  portfolioPortfolio_none?: InputMaybe<PortfolioWhereInput>;
   scheduledIn_every?: InputMaybe<ScheduledOperationWhereInput>;
   scheduledIn_some?: InputMaybe<ScheduledOperationWhereInput>;
   scheduledIn_none?: InputMaybe<ScheduledOperationWhereInput>;
@@ -1401,6 +1423,50 @@ export type Mutation = {
   schedulePublishInfo?: Maybe<Info>;
   /** Unpublish one info from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   scheduleUnpublishInfo?: Maybe<Info>;
+  /** Create one portfolio */
+  createPortfolio?: Maybe<Portfolio>;
+  /** Update one portfolio */
+  updatePortfolio?: Maybe<Portfolio>;
+  /** Delete one portfolio from _all_ existing stages. Returns deleted document. */
+  deletePortfolio?: Maybe<Portfolio>;
+  /** Upsert one portfolio */
+  upsertPortfolio?: Maybe<Portfolio>;
+  /** Publish one portfolio */
+  publishPortfolio?: Maybe<Portfolio>;
+  /** Unpublish one portfolio from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
+  unpublishPortfolio?: Maybe<Portfolio>;
+  /** Update many Portfolio documents */
+  updateManyPortfoliosConnection: PortfolioConnection;
+  /** Delete many Portfolio documents, return deleted documents */
+  deleteManyPortfoliosConnection: PortfolioConnection;
+  /** Publish many Portfolio documents */
+  publishManyPortfoliosConnection: PortfolioConnection;
+  /** Find many Portfolio documents that match criteria in specified stage and unpublish from target stages */
+  unpublishManyPortfoliosConnection: PortfolioConnection;
+  /**
+   * Update many portfolios
+   * @deprecated Please use the new paginated many mutation (updateManyPortfoliosConnection)
+   */
+  updateManyPortfolios: BatchPayload;
+  /**
+   * Delete many Portfolio documents
+   * @deprecated Please use the new paginated many mutation (deleteManyPortfoliosConnection)
+   */
+  deleteManyPortfolios: BatchPayload;
+  /**
+   * Publish many Portfolio documents
+   * @deprecated Please use the new paginated many mutation (publishManyPortfoliosConnection)
+   */
+  publishManyPortfolios: BatchPayload;
+  /**
+   * Unpublish many Portfolio documents
+   * @deprecated Please use the new paginated many mutation (unpublishManyPortfoliosConnection)
+   */
+  unpublishManyPortfolios: BatchPayload;
+  /** Schedule to publish one portfolio */
+  schedulePublishPortfolio?: Maybe<Portfolio>;
+  /** Unpublish one portfolio from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
+  scheduleUnpublishPortfolio?: Maybe<Portfolio>;
   /** Create one slide */
   createSlide?: Maybe<Slide>;
   /** Update one slide */
@@ -1769,6 +1835,124 @@ export type MutationScheduleUnpublishInfoArgs = {
 };
 
 
+export type MutationCreatePortfolioArgs = {
+  data: PortfolioCreateInput;
+};
+
+
+export type MutationUpdatePortfolioArgs = {
+  where: PortfolioWhereUniqueInput;
+  data: PortfolioUpdateInput;
+};
+
+
+export type MutationDeletePortfolioArgs = {
+  where: PortfolioWhereUniqueInput;
+};
+
+
+export type MutationUpsertPortfolioArgs = {
+  where: PortfolioWhereUniqueInput;
+  upsert: PortfolioUpsertInput;
+};
+
+
+export type MutationPublishPortfolioArgs = {
+  where: PortfolioWhereUniqueInput;
+  to?: Array<Stage>;
+};
+
+
+export type MutationUnpublishPortfolioArgs = {
+  where: PortfolioWhereUniqueInput;
+  from?: Array<Stage>;
+};
+
+
+export type MutationUpdateManyPortfoliosConnectionArgs = {
+  where?: InputMaybe<PortfolioManyWhereInput>;
+  data: PortfolioUpdateManyInput;
+  skip?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  before?: InputMaybe<Scalars['ID']>;
+  after?: InputMaybe<Scalars['ID']>;
+};
+
+
+export type MutationDeleteManyPortfoliosConnectionArgs = {
+  where?: InputMaybe<PortfolioManyWhereInput>;
+  skip?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  before?: InputMaybe<Scalars['ID']>;
+  after?: InputMaybe<Scalars['ID']>;
+};
+
+
+export type MutationPublishManyPortfoliosConnectionArgs = {
+  where?: InputMaybe<PortfolioManyWhereInput>;
+  from?: InputMaybe<Stage>;
+  to?: Array<Stage>;
+  skip?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  before?: InputMaybe<Scalars['ID']>;
+  after?: InputMaybe<Scalars['ID']>;
+};
+
+
+export type MutationUnpublishManyPortfoliosConnectionArgs = {
+  where?: InputMaybe<PortfolioManyWhereInput>;
+  stage?: InputMaybe<Stage>;
+  from?: Array<Stage>;
+  skip?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  before?: InputMaybe<Scalars['ID']>;
+  after?: InputMaybe<Scalars['ID']>;
+};
+
+
+export type MutationUpdateManyPortfoliosArgs = {
+  where?: InputMaybe<PortfolioManyWhereInput>;
+  data: PortfolioUpdateManyInput;
+};
+
+
+export type MutationDeleteManyPortfoliosArgs = {
+  where?: InputMaybe<PortfolioManyWhereInput>;
+};
+
+
+export type MutationPublishManyPortfoliosArgs = {
+  where?: InputMaybe<PortfolioManyWhereInput>;
+  to?: Array<Stage>;
+};
+
+
+export type MutationUnpublishManyPortfoliosArgs = {
+  where?: InputMaybe<PortfolioManyWhereInput>;
+  from?: Array<Stage>;
+};
+
+
+export type MutationSchedulePublishPortfolioArgs = {
+  where: PortfolioWhereUniqueInput;
+  to?: Array<Stage>;
+  releaseAt?: InputMaybe<Scalars['DateTime']>;
+  releaseId?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationScheduleUnpublishPortfolioArgs = {
+  where: PortfolioWhereUniqueInput;
+  from?: Array<Stage>;
+  releaseAt?: InputMaybe<Scalars['DateTime']>;
+  releaseId?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationCreateSlideArgs = {
   data: SlideCreateInput;
 };
@@ -2027,6 +2211,385 @@ export type PageInfo = {
   pageSize?: Maybe<Scalars['Int']>;
 };
 
+export type Portfolio = Node & {
+  __typename?: 'Portfolio';
+  /** System stage field */
+  stage: Stage;
+  /** Get the document in other stages */
+  documentInStages: Array<Portfolio>;
+  /** The unique identifier */
+  id: Scalars['ID'];
+  /** The time the document was created */
+  createdAt: Scalars['DateTime'];
+  /** The time the document was updated */
+  updatedAt: Scalars['DateTime'];
+  /** The time the document was published. Null on documents in draft stage. */
+  publishedAt?: Maybe<Scalars['DateTime']>;
+  /** User that created this document */
+  createdBy?: Maybe<User>;
+  /** User that last updated this document */
+  updatedBy?: Maybe<User>;
+  /** User that last published this document */
+  publishedBy?: Maybe<User>;
+  portfolio: Array<Asset>;
+  scheduledIn: Array<ScheduledOperation>;
+  /** List of Portfolio versions */
+  history: Array<Version>;
+};
+
+
+export type PortfolioDocumentInStagesArgs = {
+  stages?: Array<Stage>;
+  includeCurrent?: Scalars['Boolean'];
+  inheritLocale?: Scalars['Boolean'];
+};
+
+
+export type PortfolioCreatedByArgs = {
+  locales?: InputMaybe<Array<Locale>>;
+};
+
+
+export type PortfolioUpdatedByArgs = {
+  locales?: InputMaybe<Array<Locale>>;
+};
+
+
+export type PortfolioPublishedByArgs = {
+  locales?: InputMaybe<Array<Locale>>;
+};
+
+
+export type PortfolioPortfolioArgs = {
+  where?: InputMaybe<AssetWhereInput>;
+  orderBy?: InputMaybe<AssetOrderByInput>;
+  skip?: InputMaybe<Scalars['Int']>;
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  locales?: InputMaybe<Array<Locale>>;
+};
+
+
+export type PortfolioScheduledInArgs = {
+  where?: InputMaybe<ScheduledOperationWhereInput>;
+  skip?: InputMaybe<Scalars['Int']>;
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  locales?: InputMaybe<Array<Locale>>;
+};
+
+
+export type PortfolioHistoryArgs = {
+  limit?: Scalars['Int'];
+  skip?: Scalars['Int'];
+  stageOverride?: InputMaybe<Stage>;
+};
+
+export type PortfolioConnectInput = {
+  /** Document to connect */
+  where: PortfolioWhereUniqueInput;
+  /** Allow to specify document position in list of connected documents, will default to appending at end of list */
+  position?: InputMaybe<ConnectPositionInput>;
+};
+
+/** A connection to a list of items. */
+export type PortfolioConnection = {
+  __typename?: 'PortfolioConnection';
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** A list of edges. */
+  edges: Array<PortfolioEdge>;
+  aggregate: Aggregate;
+};
+
+export type PortfolioCreateInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+  portfolio?: InputMaybe<AssetCreateManyInlineInput>;
+};
+
+export type PortfolioCreateManyInlineInput = {
+  /** Create and connect multiple existing Portfolio documents */
+  create?: InputMaybe<Array<PortfolioCreateInput>>;
+  /** Connect multiple existing Portfolio documents */
+  connect?: InputMaybe<Array<PortfolioWhereUniqueInput>>;
+};
+
+export type PortfolioCreateOneInlineInput = {
+  /** Create and connect one Portfolio document */
+  create?: InputMaybe<PortfolioCreateInput>;
+  /** Connect one existing Portfolio document */
+  connect?: InputMaybe<PortfolioWhereUniqueInput>;
+};
+
+/** An edge in a connection. */
+export type PortfolioEdge = {
+  __typename?: 'PortfolioEdge';
+  /** The item at the end of the edge. */
+  node: Portfolio;
+  /** A cursor for use in pagination. */
+  cursor: Scalars['String'];
+};
+
+/** Identifies documents */
+export type PortfolioManyWhereInput = {
+  /** Contains search across all appropriate fields. */
+  _search?: InputMaybe<Scalars['String']>;
+  /** Logical AND on all given filters. */
+  AND?: InputMaybe<Array<PortfolioWhereInput>>;
+  /** Logical OR on all given filters. */
+  OR?: InputMaybe<Array<PortfolioWhereInput>>;
+  /** Logical NOT on all given filters combined by AND. */
+  NOT?: InputMaybe<Array<PortfolioWhereInput>>;
+  id?: InputMaybe<Scalars['ID']>;
+  /** All values that are not equal to given value. */
+  id_not?: InputMaybe<Scalars['ID']>;
+  /** All values that are contained in given list. */
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  /** All values that are not contained in given list. */
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  /** All values containing the given string. */
+  id_contains?: InputMaybe<Scalars['ID']>;
+  /** All values not containing the given string. */
+  id_not_contains?: InputMaybe<Scalars['ID']>;
+  /** All values starting with the given string. */
+  id_starts_with?: InputMaybe<Scalars['ID']>;
+  /** All values not starting with the given string. */
+  id_not_starts_with?: InputMaybe<Scalars['ID']>;
+  /** All values ending with the given string. */
+  id_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values not ending with the given string */
+  id_not_ends_with?: InputMaybe<Scalars['ID']>;
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not equal to given value. */
+  createdAt_not?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are contained in given list. */
+  createdAt_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  /** All values that are not contained in given list. */
+  createdAt_not_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  /** All values less than the given value. */
+  createdAt_lt?: InputMaybe<Scalars['DateTime']>;
+  /** All values less than or equal the given value. */
+  createdAt_lte?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than the given value. */
+  createdAt_gt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than or equal the given value. */
+  createdAt_gte?: InputMaybe<Scalars['DateTime']>;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not equal to given value. */
+  updatedAt_not?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are contained in given list. */
+  updatedAt_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  /** All values that are not contained in given list. */
+  updatedAt_not_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  /** All values less than the given value. */
+  updatedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  /** All values less than or equal the given value. */
+  updatedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than the given value. */
+  updatedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than or equal the given value. */
+  updatedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not equal to given value. */
+  publishedAt_not?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are contained in given list. */
+  publishedAt_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  /** All values that are not contained in given list. */
+  publishedAt_not_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  /** All values less than the given value. */
+  publishedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  /** All values less than or equal the given value. */
+  publishedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than the given value. */
+  publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than or equal the given value. */
+  publishedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  createdBy?: InputMaybe<UserWhereInput>;
+  updatedBy?: InputMaybe<UserWhereInput>;
+  publishedBy?: InputMaybe<UserWhereInput>;
+  portfolio_every?: InputMaybe<AssetWhereInput>;
+  portfolio_some?: InputMaybe<AssetWhereInput>;
+  portfolio_none?: InputMaybe<AssetWhereInput>;
+  scheduledIn_every?: InputMaybe<ScheduledOperationWhereInput>;
+  scheduledIn_some?: InputMaybe<ScheduledOperationWhereInput>;
+  scheduledIn_none?: InputMaybe<ScheduledOperationWhereInput>;
+};
+
+export enum PortfolioOrderByInput {
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC',
+  PublishedAtAsc = 'publishedAt_ASC',
+  PublishedAtDesc = 'publishedAt_DESC'
+}
+
+export type PortfolioUpdateInput = {
+  portfolio?: InputMaybe<AssetUpdateManyInlineInput>;
+};
+
+export type PortfolioUpdateManyInlineInput = {
+  /** Create and connect multiple Portfolio documents */
+  create?: InputMaybe<Array<PortfolioCreateInput>>;
+  /** Connect multiple existing Portfolio documents */
+  connect?: InputMaybe<Array<PortfolioConnectInput>>;
+  /** Override currently-connected documents with multiple existing Portfolio documents */
+  set?: InputMaybe<Array<PortfolioWhereUniqueInput>>;
+  /** Update multiple Portfolio documents */
+  update?: InputMaybe<Array<PortfolioUpdateWithNestedWhereUniqueInput>>;
+  /** Upsert multiple Portfolio documents */
+  upsert?: InputMaybe<Array<PortfolioUpsertWithNestedWhereUniqueInput>>;
+  /** Disconnect multiple Portfolio documents */
+  disconnect?: InputMaybe<Array<PortfolioWhereUniqueInput>>;
+  /** Delete multiple Portfolio documents */
+  delete?: InputMaybe<Array<PortfolioWhereUniqueInput>>;
+};
+
+export type PortfolioUpdateManyInput = {
+  /** No fields in updateMany data input */
+  _?: InputMaybe<Scalars['String']>;
+};
+
+export type PortfolioUpdateManyWithNestedWhereInput = {
+  /** Document search */
+  where: PortfolioWhereInput;
+  /** Update many input */
+  data: PortfolioUpdateManyInput;
+};
+
+export type PortfolioUpdateOneInlineInput = {
+  /** Create and connect one Portfolio document */
+  create?: InputMaybe<PortfolioCreateInput>;
+  /** Update single Portfolio document */
+  update?: InputMaybe<PortfolioUpdateWithNestedWhereUniqueInput>;
+  /** Upsert single Portfolio document */
+  upsert?: InputMaybe<PortfolioUpsertWithNestedWhereUniqueInput>;
+  /** Connect existing Portfolio document */
+  connect?: InputMaybe<PortfolioWhereUniqueInput>;
+  /** Disconnect currently connected Portfolio document */
+  disconnect?: InputMaybe<Scalars['Boolean']>;
+  /** Delete currently connected Portfolio document */
+  delete?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type PortfolioUpdateWithNestedWhereUniqueInput = {
+  /** Unique document search */
+  where: PortfolioWhereUniqueInput;
+  /** Document to update */
+  data: PortfolioUpdateInput;
+};
+
+export type PortfolioUpsertInput = {
+  /** Create document if it didn't exist */
+  create: PortfolioCreateInput;
+  /** Update document if it exists */
+  update: PortfolioUpdateInput;
+};
+
+export type PortfolioUpsertWithNestedWhereUniqueInput = {
+  /** Unique document search */
+  where: PortfolioWhereUniqueInput;
+  /** Upsert data */
+  data: PortfolioUpsertInput;
+};
+
+/** Identifies documents */
+export type PortfolioWhereInput = {
+  /** Contains search across all appropriate fields. */
+  _search?: InputMaybe<Scalars['String']>;
+  /** Logical AND on all given filters. */
+  AND?: InputMaybe<Array<PortfolioWhereInput>>;
+  /** Logical OR on all given filters. */
+  OR?: InputMaybe<Array<PortfolioWhereInput>>;
+  /** Logical NOT on all given filters combined by AND. */
+  NOT?: InputMaybe<Array<PortfolioWhereInput>>;
+  id?: InputMaybe<Scalars['ID']>;
+  /** All values that are not equal to given value. */
+  id_not?: InputMaybe<Scalars['ID']>;
+  /** All values that are contained in given list. */
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  /** All values that are not contained in given list. */
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  /** All values containing the given string. */
+  id_contains?: InputMaybe<Scalars['ID']>;
+  /** All values not containing the given string. */
+  id_not_contains?: InputMaybe<Scalars['ID']>;
+  /** All values starting with the given string. */
+  id_starts_with?: InputMaybe<Scalars['ID']>;
+  /** All values not starting with the given string. */
+  id_not_starts_with?: InputMaybe<Scalars['ID']>;
+  /** All values ending with the given string. */
+  id_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values not ending with the given string */
+  id_not_ends_with?: InputMaybe<Scalars['ID']>;
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not equal to given value. */
+  createdAt_not?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are contained in given list. */
+  createdAt_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  /** All values that are not contained in given list. */
+  createdAt_not_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  /** All values less than the given value. */
+  createdAt_lt?: InputMaybe<Scalars['DateTime']>;
+  /** All values less than or equal the given value. */
+  createdAt_lte?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than the given value. */
+  createdAt_gt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than or equal the given value. */
+  createdAt_gte?: InputMaybe<Scalars['DateTime']>;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not equal to given value. */
+  updatedAt_not?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are contained in given list. */
+  updatedAt_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  /** All values that are not contained in given list. */
+  updatedAt_not_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  /** All values less than the given value. */
+  updatedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  /** All values less than or equal the given value. */
+  updatedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than the given value. */
+  updatedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than or equal the given value. */
+  updatedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not equal to given value. */
+  publishedAt_not?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are contained in given list. */
+  publishedAt_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  /** All values that are not contained in given list. */
+  publishedAt_not_in?: InputMaybe<Array<Scalars['DateTime']>>;
+  /** All values less than the given value. */
+  publishedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  /** All values less than or equal the given value. */
+  publishedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than the given value. */
+  publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than or equal the given value. */
+  publishedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  createdBy?: InputMaybe<UserWhereInput>;
+  updatedBy?: InputMaybe<UserWhereInput>;
+  publishedBy?: InputMaybe<UserWhereInput>;
+  portfolio_every?: InputMaybe<AssetWhereInput>;
+  portfolio_some?: InputMaybe<AssetWhereInput>;
+  portfolio_none?: InputMaybe<AssetWhereInput>;
+  scheduledIn_every?: InputMaybe<ScheduledOperationWhereInput>;
+  scheduledIn_some?: InputMaybe<ScheduledOperationWhereInput>;
+  scheduledIn_none?: InputMaybe<ScheduledOperationWhereInput>;
+};
+
+/** References Portfolio record uniquely */
+export type PortfolioWhereUniqueInput = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
 export type PublishLocaleInput = {
   /** Locales to publish */
   locale: Locale;
@@ -2072,6 +2635,14 @@ export type Query = {
   infosConnection: InfoConnection;
   /** Retrieve document version */
   infoVersion?: Maybe<DocumentVersion>;
+  /** Retrieve multiple portfolios */
+  portfolios: Array<Portfolio>;
+  /** Retrieve a single portfolio */
+  portfolio?: Maybe<Portfolio>;
+  /** Retrieve multiple portfolios using the Relay connection interface */
+  portfoliosConnection: PortfolioConnection;
+  /** Retrieve document version */
+  portfolioVersion?: Maybe<DocumentVersion>;
   /** Retrieve multiple slides */
   slides: Array<Slide>;
   /** Retrieve a single slide */
@@ -2273,6 +2844,44 @@ export type QueryInfoVersionArgs = {
 };
 
 
+export type QueryPortfoliosArgs = {
+  where?: InputMaybe<PortfolioWhereInput>;
+  orderBy?: InputMaybe<PortfolioOrderByInput>;
+  skip?: InputMaybe<Scalars['Int']>;
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  stage?: Stage;
+  locales?: Array<Locale>;
+};
+
+
+export type QueryPortfolioArgs = {
+  where: PortfolioWhereUniqueInput;
+  stage?: Stage;
+  locales?: Array<Locale>;
+};
+
+
+export type QueryPortfoliosConnectionArgs = {
+  where?: InputMaybe<PortfolioWhereInput>;
+  orderBy?: InputMaybe<PortfolioOrderByInput>;
+  skip?: InputMaybe<Scalars['Int']>;
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  stage?: Stage;
+  locales?: Array<Locale>;
+};
+
+
+export type QueryPortfolioVersionArgs = {
+  where: VersionWhereInput;
+};
+
+
 export type QuerySlidesArgs = {
   where?: InputMaybe<SlideWhereInput>;
   orderBy?: InputMaybe<SlideOrderByInput>;
@@ -2455,7 +3064,7 @@ export type ScheduledOperationAffectedDocumentsArgs = {
   locales?: InputMaybe<Array<Locale>>;
 };
 
-export type ScheduledOperationAffectedDocument = Asset | Info | Slide | Test;
+export type ScheduledOperationAffectedDocument = Asset | Info | Portfolio | Slide | Test;
 
 export type ScheduledOperationConnectInput = {
   /** Document to connect */
@@ -4626,6 +5235,13 @@ export type SlidesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type SlidesQuery = { __typename?: 'Query', slides: Array<{ __typename?: 'Slide', id: string, slide: Array<{ __typename?: 'Asset', id: string, url: string }> }> };
 
+export type AssetsQueryVariables = Exact<{
+  OR?: InputMaybe<Array<AssetWhereInput> | AssetWhereInput>;
+}>;
+
+
+export type AssetsQuery = { __typename?: 'Query', assets: Array<{ __typename?: 'Asset', id: string, fileName: string, url: string }> };
+
 
 export const SlideDocument = gql`
     query Slide {
@@ -4649,6 +5265,15 @@ export const SlidesDocument = gql`
   }
 }
     `;
+export const AssetsDocument = gql`
+    query Assets($OR: [AssetWhereInput!]) {
+  assets(where: {OR: $OR}) {
+    id
+    fileName
+    url
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string) => Promise<T>;
 
@@ -4662,6 +5287,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     Slides(variables?: SlidesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SlidesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<SlidesQuery>(SlidesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Slides');
+    },
+    Assets(variables?: AssetsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<AssetsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<AssetsQuery>(AssetsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Assets');
     }
   };
 }
